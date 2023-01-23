@@ -8,6 +8,9 @@ ALTER TABLE
     "order"
     DROP CONSTRAINT IF EXISTS "order_taxi_type_id_foreign";
 ALTER TABLE
+    "order"
+    DROP CONSTRAINT IF EXISTS "order_usr_id_foreign";
+ALTER TABLE
     "usr_token"
     DROP CONSTRAINT IF EXISTS "usr_token_user_id_foreign";
 ALTER TABLE
