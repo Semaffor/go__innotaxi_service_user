@@ -1,4 +1,4 @@
-module go__innotaxi_service_user
+module github.com/Semaffor/go__innotaxi_service_user
 
 go 1.19
 
