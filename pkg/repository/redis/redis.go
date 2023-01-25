@@ -2,8 +2,8 @@ package postgres
 
 import (
 	"fmt"
+	repo "github.com/Semaffor/go__innotaxi_service_user/pkg/repository"
 	"github.com/go-redis/redis/v8"
-	repo "go__innotaxi_service_user/pkg/repository"
 )
 
 func newRedis(config repo.Config) (*redis.Client, error) {
