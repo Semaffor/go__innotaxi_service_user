@@ -3,24 +3,34 @@ package handler
 import (
 	"github.com/Semaffor/go__innotaxi_service_user/pkg/service/mongodb"
 	"github.com/Semaffor/go__innotaxi_service_user/pkg/service/postgres"
+	"github.com/Semaffor/go__innotaxi_service_user/pkg/service/redis"
 	"github.com/gin-gonic/gin"
 )
 
 type Handler struct {
-	servicesMongo   *mongodb.ServiceMongo
-	servicesPostgre *postgres.ServicePostgres
-	// tokenManager    auth.TokenManager
+	serviceMongo   *mongodb.ServiceMongo
+	servicePostgre *postgres.ServicePostgres
+	serviceRedis   *redis.ServiceRedis
 }
 
-func NewHandler(servicesMongo *mongodb.ServiceMongo, servicesPostgre *postgres.ServicePostgres) *Handler {
-	return &Handler{}
-	// return &Handler{servicesMongo: servicesMongo, servicesPostgre: servicesPostgre}
+func NewHandler(
+	serviceMongo *mongodb.ServiceMongo,
+	servicePostgre *postgres.ServicePostgres,
+	serviceRedis *redis.ServiceRedis,
+) *Handler {
+	return &Handler{
+		serviceMongo,
+		servicePostgre,
+		serviceRedis,
+	}
 }
 
 func (h *Handler) InitRoutes() *gin.Engine {
 	router := gin.New()
 
-	auth := router.Group("/auth")
+	v1 := router.Group("/api/v1")
+
+	auth := v1.Group("/auth")
 	{
 		auth.POST("/logIn", h.logIn)
 		auth.POST("/signUp", h.signUp)
