@@ -1,17 +1,20 @@
 server:
   port: "8000"
   host: "localhost"
+  maxHeaderBytes: "20"
+  readTimeout: "10"
+  writeTimeout: "10"
 
 postgres:
   port: "5432"
   host: "localhost"
   username: "postgres"
   dbname: "postgres"
-  sslmode: "disable"
+  sslMode: "disable"
 
 mongodb:
   port:
   host: "localhost"
   username:
   dbname: "mongodb"
-  sslmode: "disable"
+  sslMode: "disable"

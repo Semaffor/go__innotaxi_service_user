@@ -3,6 +3,7 @@ package config
 import (
 	"log"
 	"os"
+	"time"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/joho/godotenv"
@@ -11,8 +12,11 @@ import (
 )
 
 type Server struct {
-	Host string `mapstructure:"host" default:"localhost"` // TODO: default not working
-	Port string `mapstructure:"port" default:"8000"`
+	Host           string        `mapstructure:"host" default:"localhost" json:"host,omitempty"` // TODO: default not working
+	Port           string        `mapstructure:"port" default:"8000" json:"port,omitempty"`
+	MaxHeaderBytes int           `mapstructure:"maxHeaderBytes" default:"20"` // number of bit shifts to the left
+	ReadTimeout    time.Duration `mapstructure:"readTimeout" default:"10"`    // time in seconds
+	WriteTimeout   time.Duration `mapstructure:"writeTimeout" default:"10"`   // time in seconds
 }
 
 type ConfigDb struct {
