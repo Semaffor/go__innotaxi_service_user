@@ -1,13 +1,15 @@
 port: "8000"
+
 postgres:
   port: "5432"
   host: "localhost"
   username: "postgres"
   dbname: "postgres"
   sslmode: "disable"
+
 mongodb:
   port:
-  host: localhost
+  host: "localhost"
   username:
-  dbname: mongodb
-  sslmode: disable
+  dbname: "mongodb"
+  sslmode: "disable"
