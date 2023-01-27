@@ -1,11 +1,13 @@
 package handler
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 )
 
 func (h *Handler) logIn(ctx *gin.Context) {
-	ctx.JSON(200, map[string]interface{}{
+	ctx.JSON(http.StatusOK, map[string]interface{}{
 		"payload": "example",
 	})
 }
