@@ -2,9 +2,9 @@ name: Go
 
 on:
   push:
-    branches: [ "main", "develop" ]
-  pull_request:
     branches: [ "main", "develop", "features/*"]
+  pull_request:
+    branches: [ "main", "develop", "features/*" ]
 
 jobs:
   init:
