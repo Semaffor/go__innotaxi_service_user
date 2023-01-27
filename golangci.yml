@@ -1,0 +1,14 @@
+run:
+  concurrency: 8
+  timeout: 1m
+  issues-exit-code: 10
+  tests: true
+  skip-dirs-use-default: true
+  allow-parallel-runners: true
+output:
+  format: colored-line-number
+  sort-results: true
+linters:
+  disable-all: false
+  enable:
+    - goimports
