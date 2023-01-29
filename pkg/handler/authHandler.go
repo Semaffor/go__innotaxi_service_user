@@ -1,30 +1,32 @@
 package handler
 
 import (
-	"github.com/Semaffor/go__innotaxi_service_user/pkg/domain"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
+
+	"github.com/Semaffor/go__innotaxi_service_user/pkg/domain"
 )
 
-func (h *Handler) logIn(ctx *gin.Context) {
+func (h *Handler) LogIn(ctx *gin.Context) {
 	userCredentials := domain.UserCredentials{}
 
 	if err := ctx.BindJSON(&userCredentials); err != nil {
-		newErrorResponse(ctx, http.StatusBadRequest, "Invalid user data")
+		NewErrorResponse(ctx, http.StatusBadRequest, "Invalid user data")
 		return
 	}
 
-	user, err := h.servicePostgre.User.Authentication(&userCredentials)
+	user, err := h.ServicePostgre.User.Authentication(&userCredentials)
 
 	if err != nil {
-		newErrorResponse(ctx, http.StatusBadRequest, err.Error())
+		NewErrorResponse(ctx, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	res, err := h.serviceRedis.Authorization.CreateSession(user)
+	res, err := h.ServiceRedis.Authorization.CreateSession(&user)
 
 	if err != nil {
-		newErrorResponse(ctx, http.StatusBadRequest, err.Error())
+		NewErrorResponse(ctx, http.StatusBadRequest, err.Error())
 		return
 	}
 
@@ -34,5 +36,5 @@ func (h *Handler) logIn(ctx *gin.Context) {
 	})
 }
 
-func (h *Handler) signUp(ctx *gin.Context) {
+func (h *Handler) SignUp(ctx *gin.Context) {
 }
