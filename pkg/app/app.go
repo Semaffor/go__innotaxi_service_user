@@ -9,6 +9,7 @@ import (
 	innotaxi "github.com/Semaffor/go__innotaxi_service_user"
 	"github.com/Semaffor/go__innotaxi_service_user/pkg/config"
 	"github.com/Semaffor/go__innotaxi_service_user/pkg/handler"
+	"github.com/Semaffor/go__innotaxi_service_user/pkg/repository/configurator"
 	repositoryMongo "github.com/Semaffor/go__innotaxi_service_user/pkg/repository/mongodb"
 	repositoryPostgres "github.com/Semaffor/go__innotaxi_service_user/pkg/repository/postgres"
 	serviceMongo "github.com/Semaffor/go__innotaxi_service_user/pkg/service/mongodb"
@@ -17,15 +18,15 @@ import (
 
 func Run(configDir string) error {
 	if err := initConfig(configDir); err != nil {
-		log.Fatalf("Can't read config file.")
+		log.Fatalf("Can't read configurator file.")
 	}
 
-	config.InitDataBaseConnections()
+	configurator.InitDataBaseConnections()
 
 	handlers := handler.NewHandler(nil, nil)
 
 	server := new(innotaxi.Server)
-	serverConfig := config.ReadConfig("server", &config.Server{})
+	serverConfig := config.ReadConfig("server", &config.ServerConfig{})
 	if err := server.Run(serverConfig, handlers.InitRoutes()); err != nil {
 		log.Println("Error occurred while running.")
 		return err
@@ -45,7 +46,7 @@ func initService(dbPostgre, dbMongo *sqlx.DB) *handler.Handler {
 
 func initConfig(configDir string) error {
 	viper.AddConfigPath(configDir)
-	viper.SetConfigName("config")
+	viper.SetConfigName("configurator")
 
 	return viper.ReadInConfig()
 }

@@ -6,7 +6,6 @@ type Mock interface {
 }
 
 type RepositoryPostgres struct {
-	Mock
 }
 
 func NewRepositoryPostgres(db *sqlx.DB) *RepositoryPostgres {

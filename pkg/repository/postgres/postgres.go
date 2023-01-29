@@ -2,9 +2,11 @@ package postgres
 
 import (
 	"github.com/jmoiron/sqlx"
-	repo "go__innotaxi_service_user/pkg/repository"
+
+	"github.com/Semaffor/go__innotaxi_service_user/pkg/config"
+	repo "github.com/Semaffor/go__innotaxi_service_user/pkg/repository"
 )
 
-func newPostgres(connectionCofig repo.Config) (*sqlx.DB, error) {
+func newPostgres(connectionCofig *config.ConfigDb) (*sqlx.DB, error) {
 	return repo.NewDbConnection(connectionCofig, "postgres")
 }

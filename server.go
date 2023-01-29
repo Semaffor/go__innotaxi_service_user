@@ -12,7 +12,7 @@ type Server struct {
 	httpServer *http.Server
 }
 
-func (s *Server) Run(serverConfig *config.Server, handler http.Handler) error {
+func (s *Server) Run(serverConfig *config.ServerConfig, handler http.Handler) error {
 	s.httpServer = &http.Server{
 		Addr:           ":" + serverConfig.Port,
 		Handler:        handler,

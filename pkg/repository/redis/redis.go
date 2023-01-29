@@ -1,14 +1,16 @@
-package postgres
+package redis
 
 import (
 	"fmt"
-	repo "github.com/Semaffor/go__innotaxi_service_user/pkg/repository"
-	"github.com/go-redis/redis/v8"
+
+	rediska "github.com/go-redis/redis/v8"
+
+	"github.com/Semaffor/go__innotaxi_service_user/pkg/config"
 )
 
-func newRedis(config repo.Config) (*redis.Client, error) {
+func newRedis(config *config.ConfigDb) (*rediska.Client, error) {
 	addr := fmt.Sprintf("%s:%s", config.Host, config.Port)
-	client := redis.NewClient(&redis.Options{
+	client := rediska.NewClient(&rediska.Options{
 		Addr:     addr,
 		Password: config.Password,
 		DB:       0,

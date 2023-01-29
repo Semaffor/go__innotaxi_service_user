@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"fmt"
+
 	"github.com/gin-gonic/gin"
 
 	"github.com/Semaffor/go__innotaxi_service_user/pkg/service/mongodb"
@@ -12,7 +14,8 @@ type Handler struct {
 	servicesPostgre *postgres.ServicePostgres
 }
 
-func NewHandler(servicesMongo *mongodb.ServiceMongo, servicesPostgre *postgres.ServicePostgres) *Handler {
+func NewHandler(serviceMongo *mongodb.ServiceMongo, servicePostgre *postgres.ServicePostgres) *Handler {
+	fmt.Println(serviceMongo, servicePostgre)
 	return &Handler{}
 }
 
