@@ -15,6 +15,6 @@ type UserCredentials struct {
 
 type JwtClaims struct {
 	jwt.StandardClaims
-	UserId   int    `json:"userId,required"`
-	Username string `json:"username,required"`
+	UserId int    `json:"userId,required"`
+	Role   string `json:"role,required"`
 }
