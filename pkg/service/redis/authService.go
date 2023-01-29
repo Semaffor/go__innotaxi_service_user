@@ -1,15 +1,17 @@
 package redis
 
 import (
+	"os"
+	"time"
+
 	"github.com/Semaffor/go__innotaxi_service_user/pkg/auth"
 	"github.com/Semaffor/go__innotaxi_service_user/pkg/domain"
+	"github.com/Semaffor/go__innotaxi_service_user/pkg/helpers"
 	repoRedis "github.com/Semaffor/go__innotaxi_service_user/pkg/repository/redis"
-	"time"
 )
 
 var (
-	// ttl := os.Getenv("TOKEN_TTL_HOURS") * time.Hour()
-	ttl = time.Now().Add(2).Hour()
+	ttl = time.Duration(helpers.ConvertToInt(os.Getenv("TOKEN_TTL_MIN"), 20)) * time.Minute
 )
 
 type SessionService struct {
@@ -27,13 +29,17 @@ func (s *SessionService) CreateSession(user *domain.User) (domain.JwtTokens, err
 		err    error
 	)
 
-	tokens.AccessToken, err = s.Manager.NewJwt(user.Id, user.Username, time.Duration(ttl))
-
+	tokens.AccessToken, err = s.Manager.NewJwt(user.Id, user.Username, ttl)
 	if err != nil {
 		return tokens, err
 	}
-	// createRefreshToken
-	// saveRT
+
+	tokens.RefreshToken, err = s.Manager.NewRefreshToken()
+	if err != nil {
+		return tokens, err
+	}
+
+	// saveRTinDB
 
 	return tokens, nil
 }
