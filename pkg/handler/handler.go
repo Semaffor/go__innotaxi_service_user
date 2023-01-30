@@ -22,12 +22,10 @@ func NewHandler(serviceMongo *mongodb.ServiceMongo, servicePostgre *postgres.Ser
 func (h *Handler) InitRoutes() *gin.Engine {
 	router := gin.New()
 
-	v1 := router.Group("/api/v1")
-
-	auth := v1.Group("/auth")
+	auth := router.Group("/user/v1")
 	{
-		auth.POST("/logIn", h.logIn)
-		auth.POST("/signUp", h.signUp)
+		auth.POST("/login", h.logIn)
+		auth.POST("/signup", h.signUp)
 	}
 
 	return router
