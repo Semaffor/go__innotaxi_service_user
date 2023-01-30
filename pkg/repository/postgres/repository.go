@@ -2,12 +2,21 @@ package postgres
 
 import "github.com/jmoiron/sqlx"
 
-type Mock interface {
+type Authentication interface {
 }
 
-type RepositoryPostgres struct {
+type Order interface {
 }
 
-func NewRepositoryPostgres(db *sqlx.DB) *RepositoryPostgres {
-	return &RepositoryPostgres{}
+type User interface {
+}
+
+type UserRepository struct {
+	Authentication
+	Order
+	User
+}
+
+func NewUserRepository(db *sqlx.DB) *UserRepository {
+	return &UserRepository{}
 }

@@ -11,6 +11,6 @@ type ServiceMongo struct {
 	Authorization
 }
 
-func NewServiceRedis(repo *repo.RepositoryMongo) *ServiceMongo {
+func NewServiceRedis(repo *repo.LogsRepo) *ServiceMongo {
 	return &ServiceMongo{}
 }

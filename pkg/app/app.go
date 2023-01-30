@@ -50,8 +50,8 @@ func Run() error {
 }
 
 func initService(dbPostgre, dbMongo *sqlx.DB) *handler.Handler {
-	repoMongo := repositoryMongo.NewRepositoryMongo(dbMongo)
-	repoPostgres := repositoryPostgres.NewRepositoryPostgres(dbPostgre)
+	repoMongo := repositoryMongo.NewLogsRepository(dbMongo)
+	repoPostgres := repositoryPostgres.NewUserRepository(dbPostgre)
 	servMongo := serviceMongo.NewServiceMongo(repoMongo)
 	servPostgre := servicePostgres.NewServicePostgre(repoPostgres)
 

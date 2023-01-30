@@ -11,7 +11,7 @@ type ServicePostgres struct {
 	User
 }
 
-func NewServicePostgre(repo *repo.RepositoryPostgres) *ServicePostgres {
+func NewServicePostgre(repo *repo.UserRepository) *ServicePostgres {
 	return &ServicePostgres{
 		User: NewUserService(repo),
 	}

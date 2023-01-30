@@ -2,13 +2,13 @@ package mongodb
 
 import "github.com/jmoiron/sqlx"
 
-type Authorization interface {
+type Logger interface {
 }
 
-type RepositoryMongo struct {
-	Authorization
+type LogsRepo struct {
+	Logger
 }
 
-func NewRepositoryMongo(db *sqlx.DB) *RepositoryMongo {
-	return &RepositoryMongo{}
+func NewLogsRepository(db *sqlx.DB) *LogsRepo {
+	return &LogsRepo{}
 }

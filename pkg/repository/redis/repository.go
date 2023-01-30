@@ -1,13 +1,21 @@
 package redis
 
-import "github.com/jmoiron/sqlx"
+import (
+	"context"
 
-type Mock interface {
+	"github.com/jmoiron/sqlx"
+)
+
+type TokenRepo interface {
+	Set(ctx context.Context, key, value string) error
+	Get(ctx context.Context, key string) (string, error)
+	Delete(ctx context.Context, key string) error
 }
 
-type RepositoryRedis struct {
+type TokenRepository struct {
+	TokenRepo
 }
 
-func NewRepositoryRedis(db *sqlx.DB) *RepositoryRedis {
-	return &RepositoryRedis{}
+func NewTokenRepository(db *sqlx.DB) *TokenRepository {
+	return &TokenRepository{}
 }
