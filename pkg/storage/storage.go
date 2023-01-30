@@ -10,15 +10,15 @@ type Storage interface {
 	TokenRepo()
 }
 
-type UserLayer interface {
+type UserRepo interface {
 	AddUser()
 }
 
-type LogsLayer interface {
+type LogsRepo interface {
 	Add()
 }
 
-type TokenLayer interface {
+type TokenRepo interface {
 	Set(ctx context.Context, key, value string) error
 	Get(ctx context.Context, key string) (string, error)
 	Delete(ctx context.Context, key string) error
