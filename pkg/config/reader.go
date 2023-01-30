@@ -5,11 +5,9 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 	"github.com/spf13/viper"
-
-	"github.com/Semaffor/go__innotaxi_service_user/configs"
 )
 
-func ReadConfig[T *configs.ConfigDb | *configs.ServerConfig](fieldTitle string, structure T) T {
+func ReadConfig[T *ConfigDb | *ServerConfig](fieldTitle string, structure T) T {
 	config := &structure
 	stringMap := viper.GetStringMap(fieldTitle)
 	err := mapstructure.Decode(stringMap, &config)

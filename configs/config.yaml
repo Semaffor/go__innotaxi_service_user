@@ -9,12 +9,14 @@ postgres:
   port: "5432"
   host: "localhost"
   username: "postgres"
+  password: "12345"
   dbname: "postgres"
   sslMode: "disable"
 
 mongodb:
-  port:
+  port: ""
   host: "localhost"
-  username:
+  username: ""
+  password: "12345"
   dbname: "mongodb"
   sslMode: "disable"

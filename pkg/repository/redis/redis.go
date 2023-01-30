@@ -8,7 +8,7 @@ import (
 	"github.com/Semaffor/go__innotaxi_service_user/pkg/config"
 )
 
-func newRedis(config *config.ConfigDb) (*rediska.Client, error) {
+func NewConnection(config *config.ConfigDb) (*rediska.Client, error) {
 	addr := fmt.Sprintf("%s:%s", config.Host, config.Port)
 	client := rediska.NewClient(&rediska.Options{
 		Addr:     addr,
