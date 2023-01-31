@@ -1,0 +1,15 @@
+run:
+  concurrency: 8
+  timeout: 1m
+  issues-exit-code: 10
+  tests: true
+  skip-dirs-use-default: true
+  allow-parallel-runners: true
+output:
+  format: tab
+  sort-results: true
+linters:
+  enable:
+    - goimports
+  disable:
+    - unused
