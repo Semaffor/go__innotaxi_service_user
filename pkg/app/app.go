@@ -2,6 +2,7 @@ package app
 
 import (
 	"log"
+	"os"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/joho/godotenv"
@@ -29,9 +30,11 @@ func Run() error {
 
 	// init repos
 	configPostgres := config.ReadConfig("postgres", &config.ConfigDb{})
+	configPostgres.Password = os.Getenv("DB_POSTGRES_PASSWORD")
 	_ = repositoryPostgres.NewConnection(configPostgres)
 
 	configMongo := config.ReadConfig("mongo", &config.ConfigDb{})
+	configMongo.Password = os.Getenv("DB_MONGO_PASSWORD")
 	_ = repositoryMongo.NewConnection(configMongo)
 
 	// init services

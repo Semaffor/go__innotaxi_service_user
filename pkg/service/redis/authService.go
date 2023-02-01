@@ -16,11 +16,11 @@ var (
 
 type SessionService struct {
 	*auth.Manager
-	*repoRedis.RepositoryRedis
+	*repoRedis.TokenRepository
 }
 
-func NewSessionService(repositoryRedis *repoRedis.RepositoryRedis, manager *auth.Manager) *SessionService {
-	return &SessionService{Manager: manager, RepositoryRedis: repositoryRedis}
+func NewSessionService(repositoryRedis *repoRedis.TokenRepository, manager *auth.Manager) *SessionService {
+	return &SessionService{Manager: manager, TokenRepository: repositoryRedis}
 }
 
 func (s *SessionService) CreateSession(user *domain.User) (domain.JwtTokens, error) {
