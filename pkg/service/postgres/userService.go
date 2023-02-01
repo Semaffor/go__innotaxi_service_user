@@ -14,10 +14,10 @@ var fakeUserStruct = &domain.User{
 }
 
 type UserService struct {
-	repo *postgres.RepositoryPostgres
+	repo *postgres.UserRepository
 }
 
-func NewUserService(repo *postgres.RepositoryPostgres) *UserService {
+func NewUserService(repo *postgres.UserRepository) *UserService {
 	return &UserService{repo: repo}
 }
 

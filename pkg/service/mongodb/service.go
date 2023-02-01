@@ -11,6 +11,6 @@ type ServiceMongo struct {
 	Logger
 }
 
-func NewServiceMongo(repo *repo.RepositoryMongo) *ServiceMongo {
+func NewServiceMongo(repo *repo.LogsRepo) *ServiceMongo {
 	return &ServiceMongo{}
 }
