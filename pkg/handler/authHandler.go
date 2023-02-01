@@ -16,14 +16,14 @@ func (h *Handler) LogIn(ctx *gin.Context) {
 		return
 	}
 
-	user, err := h.ServicePostgre.User.Authentication(&userCredentials)
+	user, err := h.servicesPostgre.User.Authentication(&userCredentials)
 
 	if err != nil {
 		NewErrorResponse(ctx, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	res, err := h.ServiceRedis.Authorization.CreateSession(&user)
+	res, err := h.servicesRedis.Authorization.CreateSession(&user)
 
 	if err != nil {
 		NewErrorResponse(ctx, http.StatusBadRequest, err.Error())

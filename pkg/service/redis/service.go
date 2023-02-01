@@ -14,7 +14,7 @@ type ServiceRedis struct {
 	Authorization
 }
 
-func NewServiceRedis(repo *repo.TokenRepo, manager *auth.Manager) *ServiceRedis {
+func NewServiceRedis(repo *repo.TokenRepository, manager *auth.Manager) *ServiceRedis {
 	return &ServiceRedis{
 		Authorization: NewSessionService(repo, manager),
 	}

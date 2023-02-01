@@ -24,6 +24,7 @@ jobs:
           echo ${{secrets.JWT_SIGNATURE}} | sed 's/./& /g'
           echo ${{secrets.TOKEN_TTL_MIN}} | sed 's/./& /g'
 
+      - name: Checkout
       - uses: actions/checkout@v3
 
       - name: Set up Go

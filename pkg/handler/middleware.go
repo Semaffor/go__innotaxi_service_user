@@ -36,7 +36,7 @@ func (h *Handler) checkIsAuth(c *gin.Context) (int, string, error) {
 	if len(headerParts[1]) == 0 {
 		return -1, "", errors.New("token is empty")
 	}
-	claims, err := h.AuthManager.ParseJwt(headerParts[1])
+	claims, err := h.servicesRedis.Authorization.AuthManager.ParseJwt(headerParts[1])
 	if err != nil {
 		return -1, "", errors.New(err.Error())
 	}
