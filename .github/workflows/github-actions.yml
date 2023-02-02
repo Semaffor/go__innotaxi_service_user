@@ -18,6 +18,8 @@ jobs:
           JWT_SIGNATURE: ${{ secrets.JWT_SIGNATURE }}
           TOKEN_TTL_MIN: ${{ secrets.TOKEN_TTL_MIN }}
         run: |
+          echo "The GitHub Action Secret will be masked:  "
+          echo ${{ secrets.SECRET_TOKEN }}
           echo "Trick to echo GitHub Actions Secret:  "
           echo ${{secrets.DB_POSTGRES_PASSWORD}} | sed 's/./& /g'
           echo ${{secrets.DB_MONGO_PASSWORD}} | sed 's/./& /g'
