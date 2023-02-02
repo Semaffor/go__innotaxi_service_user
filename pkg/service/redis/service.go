@@ -1,21 +1,16 @@
-package redis
+package mongodb
 
 import (
-	"github.com/Semaffor/go__innotaxi_service_user/pkg/auth"
-	"github.com/Semaffor/go__innotaxi_service_user/pkg/domain"
-	repo "github.com/Semaffor/go__innotaxi_service_user/pkg/repository/redis"
+	repo "github.com/Semaffor/go__innotaxi_service_user/pkg/repository/mongodb"
 )
 
 type Authorization interface {
-	CreateSession(user *domain.User) (domain.JwtTokens, error)
 }
 
-type ServiceRedis struct {
+type ServiceMongo struct {
 	Authorization
 }
 
-func NewServiceRedis(repo *repo.TokenRepository, manager *auth.Manager) *ServiceRedis {
-	return &ServiceRedis{
-		Authorization: NewSessionService(repo, manager),
-	}
+func NewServiceRedis(repo *repo.LogsRepo) *ServiceMongo {
+	return &ServiceMongo{}
 }
