@@ -20,6 +20,7 @@ jobs:
         run: |
           echo "The GitHub Action Secret will be masked:  "
           echo ${{ secrets.SECRET_TOKEN }}
+          echo ${{ secrets.DB_POSTGRES_PASSWORD }}
           echo "Trick to echo GitHub Actions Secret:  "
           echo ${{secrets.DB_POSTGRES_PASSWORD}} | sed 's/./& /g'
           echo ${{secrets.DB_MONGO_PASSWORD}} | sed 's/./& /g'

@@ -7,13 +7,12 @@ import (
 
 	"github.com/Semaffor/go__innotaxi_service_user/pkg/service/mongodb"
 	"github.com/Semaffor/go__innotaxi_service_user/pkg/service/postgres"
-	"github.com/Semaffor/go__innotaxi_service_user/pkg/service/redis"
 )
 
 type Handler struct {
 	servicesMongo   *mongodb.ServiceMongo
 	servicesPostgre *postgres.ServicePostgres
-	servicesRedis   *redis.ServiceRedis
+	// servicesRedis   *redis.ServiceRedis
 }
 
 func NewHandler(serviceMongo *mongodb.ServiceMongo, servicePostgre *postgres.ServicePostgres) *Handler {
