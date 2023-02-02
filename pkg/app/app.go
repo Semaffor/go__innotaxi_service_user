@@ -35,9 +35,8 @@ func Run() error {
 	_ = repositoryMongo.NewConnection(configMongo)
 
 	// init services
-	//
 
-	handlers := handler.NewHandler(nil, nil)
+	handlers := handler.NewHandler(nil, nil, nil)
 
 	server := new(innotaxi.Server)
 	serverConfig := config.ReadConfig("server", &config.ServerConfig{})
@@ -49,13 +48,14 @@ func Run() error {
 	return nil
 }
 
+// will be decomposed in future task on initMongoServ and etc...
 func initService(dbPostgre, dbMongo *sqlx.DB) *handler.Handler {
 	repoMongo := repositoryMongo.NewLogsRepository(dbMongo)
 	repoPostgres := repositoryPostgres.NewUserRepository(dbPostgre)
 	servMongo := serviceMongo.NewServiceMongo(repoMongo)
 	servPostgre := servicePostgres.NewServicePostgre(repoPostgres)
 
-	return handler.NewHandler(servMongo, servPostgre)
+	return handler.NewHandler(servMongo, servPostgre, nil)
 }
 
 func initConfig(configDir string) error {
