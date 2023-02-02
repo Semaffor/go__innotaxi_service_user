@@ -39,7 +39,7 @@ func (s *SessionService) CreateSession(user *domain.User) (domain.JwtTokens, err
 		return tokens, err
 	}
 
-	// saveRTinDB
+	// // saveRTinDB
 
 	return tokens, nil
 }
