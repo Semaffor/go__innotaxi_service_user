@@ -8,6 +8,7 @@ type Authorization interface {
 }
 
 type ServiceMongo struct {
+	//
 	Authorization
 }
 
