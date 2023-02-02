@@ -10,11 +10,11 @@ type JwtTokens struct {
 type UserCredentials struct {
 	Username     string `json:"username,omitempty"`
 	MobileNumber string `json:"mobileNumber,omitempty"`
-	Password     string `json:"password,required"`
+	Password     string `json:"password"`
 }
 
 type JwtClaims struct {
 	jwt.StandardClaims
-	UserId int    `json:"userId,required"`
-	Role   string `json:"role,required"`
+	UserId int    `json:"userId"`
+	Role   string `json:"role"`
 }
