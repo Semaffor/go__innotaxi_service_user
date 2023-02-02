@@ -4,8 +4,7 @@ import (
 	repo "github.com/Semaffor/go__innotaxi_service_user/pkg/repository/postgres"
 )
 
-type User interface {
-}
+type User interface{}
 
 type ServicePostgres struct {
 	User

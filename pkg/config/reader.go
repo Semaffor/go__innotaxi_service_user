@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func ReadConfig[T *ConfigDb | *ServerConfig](fieldTitle string, structure T) T {
+func ReadConfig[T *ConfigDB | *ServerConfig](fieldTitle string, structure T) T {
 	config := &structure
 	stringMap := viper.GetStringMap(fieldTitle)
 	err := mapstructure.Decode(stringMap, &config)
