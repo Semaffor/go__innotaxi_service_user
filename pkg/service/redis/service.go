@@ -12,5 +12,6 @@ type ServiceMongo struct {
 }
 
 func NewServiceRedis(repo *repo.LogsRepo) *ServiceMongo {
+	//
 	return &ServiceMongo{}
 }
