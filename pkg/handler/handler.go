@@ -1,22 +1,25 @@
 package handler
 
 import (
-	"fmt"
-
 	"github.com/gin-gonic/gin"
 
 	"github.com/Semaffor/go__innotaxi_service_user/pkg/service/mongodb"
 	"github.com/Semaffor/go__innotaxi_service_user/pkg/service/postgres"
+	"github.com/Semaffor/go__innotaxi_service_user/pkg/service/redis"
 )
 
 type Handler struct {
 	servicesMongo   *mongodb.ServiceMongo
 	servicesPostgre *postgres.ServicePostgres
+	servicesRedis   *redis.ServiceRedis
 }
 
-func NewHandler(serviceMongo *mongodb.ServiceMongo, servicePostgre *postgres.ServicePostgres) *Handler {
-	fmt.Println(serviceMongo, servicePostgre)
-	return &Handler{}
+func NewHandler(serviceMongo *mongodb.ServiceMongo, servicePostgre *postgres.ServicePostgres, serviceRedis *redis.ServiceRedis) *Handler {
+	return &Handler{
+		servicesMongo:   serviceMongo,
+		servicesPostgre: servicePostgre,
+		servicesRedis:   serviceRedis,
+	}
 }
 
 func (h *Handler) InitRoutes() *gin.Engine {
