@@ -9,7 +9,42 @@ output:
   format: tab
   sort-results: true
 linters:
-  enable:
-    - goimports
+  enable-all: true
   disable:
-    - unused
+  # deprecated
+    - deadcode
+    - exhaustivestruct
+    - golint
+    - ifshort
+    - interfacer
+    - maligned
+    - nosnakecase
+    - scopelint
+    - structcheck
+    - varcheck
+  # generics
+    - rowserrcheck
+    - wastedassign
+    - sqlclosecheck
+  #
+    - durationcheck
+    - exhaustruct
+    - gci
+    - ireturn
+    - revive
+    - wrapcheck
+    - wsl
+linters-settings:
+  varnamelen:
+    min-name-length: 2
+    ignore-names:
+      - err
+      - db
+    ignore-decls:
+      - s *Server
+      - t testing.T
+      - e error
+      - T any
+      - m map[string]int
+  stylecheck:
+    checks: ["-ST1003"]
