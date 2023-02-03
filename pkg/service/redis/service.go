@@ -1,16 +1,13 @@
-package mongodb
+package redis
 
 import (
 	repo "github.com/Semaffor/go__innotaxi_service_user/pkg/repository/mongodb"
 )
 
-type Authorization interface {
-}
+type Authorization interface{}
 
-type ServiceMongo struct {
-	Authorization
-}
+type ServiceRedis struct{}
 
-func NewServiceRedis(repo *repo.LogsRepo) *ServiceMongo {
-	return &ServiceMongo{}
+func NewServiceRedis(repo *repo.LogsRepo) *ServiceRedis {
+	return &ServiceRedis{}
 }

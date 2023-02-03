@@ -2,14 +2,11 @@ package postgres
 
 import "github.com/jmoiron/sqlx"
 
-type Authentication interface {
-}
+type Authentication interface{}
 
-type Order interface {
-}
+type Order interface{}
 
-type User interface {
-}
+type User interface{}
 
 type UserRepository struct {
 	Authentication
