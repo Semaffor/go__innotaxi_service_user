@@ -1,6 +1,7 @@
-package auth
+package jwt
 
 import (
+	"encoding/base32"
 	"fmt"
 	"math/rand"
 	"os"
@@ -8,7 +9,7 @@ import (
 
 	"github.com/dgrijalva/jwt-go"
 
-	"github.com/Semaffor/go__innotaxi_service_user/pkg/domain"
+	"github.com/Semaffor/go__innotaxi_service_user/pkg/auth/jwt/model"
 )
 
 type TokenManager interface {
@@ -23,11 +24,12 @@ type Manager struct {
 
 func NewManager() *Manager {
 	signature := os.Getenv("JWT_SIGNATURE")
+
 	return &Manager{signature: signature}
 }
 
 func (m *Manager) NewJwt(userId int, role string, ttl time.Duration) (string, error) {
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, domain.JwtClaims{
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, model.JwtClaims{
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(ttl).Unix(),
 			IssuedAt:  time.Now().Unix(),
@@ -40,7 +42,7 @@ func (m *Manager) NewJwt(userId int, role string, ttl time.Duration) (string, er
 }
 
 func (m *Manager) ParseJwt(jwtToken string) (map[string]interface{}, error) {
-	token, err := jwt.Parse(jwtToken, func(token *jwt.Token) (i interface{}, err error) {
+	token, err := jwt.Parse(jwtToken, func(token *jwt.Token) (decryptedToken interface{}, err error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
@@ -57,20 +59,19 @@ func (m *Manager) ParseJwt(jwtToken string) (map[string]interface{}, error) {
 	}
 
 	return map[string]interface{}{
-		"userId": claims["userId"].(int),
-		"role":   claims["role"].(string),
+		"userId": claims["userId"],
+		"role":   claims["role"],
 	}, nil
 }
 
-func (m *Manager) NewRefreshToken() (string, error) {
-	b := make([]byte, 32)
+func (m *Manager) NewRefreshToken(tokenLength int) (string, error) {
+	randomBytes := make([]byte, 32)
 
-	s := rand.NewSource(time.Now().Unix())
-	r := rand.New(s)
-
-	if _, err := r.Read(b); err != nil {
+	_, err := rand.Read(randomBytes)
+	if err != nil {
 		return "", err
 	}
+	token := base32.StdEncoding.EncodeToString(randomBytes)[:tokenLength]
 
-	return fmt.Sprintf("%x", b), nil
+	return token, nil
 }

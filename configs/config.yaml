@@ -8,13 +8,13 @@ server:
 postgres:
   port: "5432"
   host: "localhost"
-  username: "postgres"
-  dbname: "postgres"
+  username: "user"
+  dbname: "user"
   sslMode: "disable"
 
 mongodb:
   port: ""
   host: "localhost"
   username: ""
-  dbname: "mongodb"
+  dbname: "log"
   sslMode: "disable"

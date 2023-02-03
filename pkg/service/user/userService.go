@@ -1,11 +1,12 @@
-package postgres
+package user
 
 import (
-	"github.com/Semaffor/go__innotaxi_service_user/pkg/domain"
+	modelJwt "github.com/Semaffor/go__innotaxi_service_user/pkg/auth/jwt/model"
 	"github.com/Semaffor/go__innotaxi_service_user/pkg/repository/postgres"
+	"github.com/Semaffor/go__innotaxi_service_user/pkg/repository/postgres/model"
 )
 
-var fakeUserStruct = &domain.User{
+var fakeUserStruct = &model.User{
 	Id:           1,
 	Username:     "Dima",
 	PhoneNumber:  "111",
@@ -21,7 +22,7 @@ func NewUserService(repo *postgres.UserRepository) *UserService {
 	return &UserService{repo: repo}
 }
 
-func (u *UserService) Authentication(credentials *domain.UserCredentials) (domain.User, error) {
+func (u *UserService) Authentication(credentials *modelJwt.UserCredentials) (model.User, error) {
 	// find user in db
 	return *fakeUserStruct, nil
 }

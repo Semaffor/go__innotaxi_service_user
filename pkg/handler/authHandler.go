@@ -5,36 +5,36 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/Semaffor/go__innotaxi_service_user/pkg/domain"
+	"github.com/Semaffor/go__innotaxi_service_user/pkg/auth/jwt/model"
 )
 
-func (h *Handler) LogIn(ctx *gin.Context) {
-	userCredentials := domain.UserCredentials{}
-
+func (h *Handler) logIn(ctx *gin.Context) {
+	userCredentials := model.UserCredentials{}
 	if err := ctx.BindJSON(&userCredentials); err != nil {
 		NewErrorResponse(ctx, http.StatusBadRequest, "Invalid user data")
+
 		return
 	}
 
-	user, err := h.servicesPostgre.User.Authentication(&userCredentials)
-
+	user, err := h.services.GetUserService().Authentication(&userCredentials)
 	if err != nil {
 		NewErrorResponse(ctx, http.StatusBadRequest, err.Error())
+
 		return
 	}
 
-	res, err := h.servicesRedis.Authorization.CreateSession(&user)
-
+	res, err := h.services.GetTokenService().Authorization.CreateSession(&user)
 	if err != nil {
 		NewErrorResponse(ctx, http.StatusBadRequest, err.Error())
+
 		return
 	}
 
-	ctx.JSON(http.StatusOK, domain.JwtTokens{
+	ctx.JSON(http.StatusOK, model.JwtTokens{
 		AccessToken:  res.AccessToken,
 		RefreshToken: res.RefreshToken,
 	})
 }
 
-func (h *Handler) SignUp(ctx *gin.Context) {
+func (h *Handler) signUp(ctx *gin.Context) {
 }

@@ -8,7 +8,7 @@ import (
 	innotaxi "github.com/Semaffor/go__innotaxi_service_user"
 	"github.com/Semaffor/go__innotaxi_service_user/pkg/config"
 	"github.com/Semaffor/go__innotaxi_service_user/pkg/handler"
-	repositoryMongo "github.com/Semaffor/go__innotaxi_service_user/pkg/repository/mongodb"
+	repositoryMongo "github.com/Semaffor/go__innotaxi_service_user/pkg/repository/mongo"
 	repositoryPostgres "github.com/Semaffor/go__innotaxi_service_user/pkg/repository/postgres"
 )
 
@@ -23,10 +23,10 @@ func Run() error {
 		log.Fatalf("Faild to load env data: %s", err.Error())
 	}
 
-	configPostgres := config.ReadConfig("postgres", &config.ConfigDB{})
+	configPostgres := config.ReadConfig("user", &config.ConfigDB{})
 	postgres := repositoryPostgres.NewConnection(configPostgres)
 
-	configMongo := config.ReadConfig("mongo", &config.ConfigDB{})
+	configMongo := config.ReadConfig("log", &config.ConfigDB{})
 	mongo := repositoryMongo.NewConnection(configMongo)
 
 	services := initServices(postgres, mongo)
@@ -36,6 +36,7 @@ func Run() error {
 	serverConfig := config.ReadConfig("server", &config.ServerConfig{})
 	if err := server.Run(serverConfig, newHandler.InitRoutes()); err != nil {
 		log.Println("Error occurred while running.")
+
 		return err
 	}
 

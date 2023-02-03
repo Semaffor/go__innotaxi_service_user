@@ -1,9 +1,9 @@
-package domain
+package model
 
 type User struct {
 	Id           int    `json:"id"`
 	Username     string `json:"name"`
-	PhoneNumber  string `json:"phone_number"`
+	PhoneNumber  string `json:"phoneNumber"`
 	Email        string `json:"email"`
-	PasswordHash string `json:"password_hash"`
+	PasswordHash string `json:"passwordHash"`
 }
