@@ -2,9 +2,9 @@ name: Go
 
 on:
   push:
-    branches: [ "main", "develop", "features/*" ]
+    branches: [ "main", "develop", "features/*"]
   pull_request:
-    branches: [ "main", "develop" ]
+    branches: [ "main", "develop"]
 
 jobs:
   init:
@@ -18,14 +18,9 @@ jobs:
           JWT_SIGNATURE: ${{ secrets.JWT_SIGNATURE }}
           TOKEN_TTL_MIN: ${{ secrets.TOKEN_TTL_MIN }}
         run: |
-          echo "Trick to echo GitHub Actions Secret:  "
-          echo ${{secrets.DB_POSTGRES_PASSWORD}} | sed 's/./& /g'
-          echo ${{secrets.DB_MONGO_PASSWORD}} | sed 's/./& /g'
-          echo ${{secrets.JWT_SIGNATURE}} | sed 's/./& /g'
-          echo ${{secrets.TOKEN_TTL_MIN}} | sed 's/./& /g'
 
       - name: Checkout
-      - uses: actions/checkout@v3
+        uses: actions/checkout@v3
 
       - name: Set up Go
         uses: actions/setup-go@v3
