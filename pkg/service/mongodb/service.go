@@ -6,10 +6,10 @@ import (
 
 type Logger interface{}
 
-type ServiceMongo struct {
+type Service struct {
 	Logger
 }
 
-func NewServiceMongo(repo *repo.LogsRepo) *ServiceMongo {
-	return &ServiceMongo{}
+func NewServiceMongo(repo *repo.LogsRepo) *Service {
+	return &Service{}
 }

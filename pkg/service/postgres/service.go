@@ -9,12 +9,12 @@ type User interface {
 	Authentication(credentials *domain.UserCredentials) (domain.User, error)
 }
 
-type ServicePostgres struct {
+type Service struct {
 	User
 }
 
-func NewServicePostgre(repo *repo.UserRepository) *ServicePostgres {
-	return &ServicePostgres{
+func NewServicePostgre(repo *repo.UserRepository) *Service {
+	return &Service{
 		User: NewUserService(repo),
 	}
 }

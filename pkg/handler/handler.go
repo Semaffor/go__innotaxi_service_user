@@ -3,26 +3,16 @@ package handler
 import (
 	"github.com/gin-gonic/gin"
 
-	"github.com/Semaffor/go__innotaxi_service_user/pkg/service/mongodb"
-	"github.com/Semaffor/go__innotaxi_service_user/pkg/service/postgres"
-	"github.com/Semaffor/go__innotaxi_service_user/pkg/service/redis"
+	"github.com/Semaffor/go__innotaxi_service_user/pkg/service"
 )
 
 type Handler struct {
-	servicesMongo   *mongodb.ServiceMongo
-	servicesPostgre *postgres.ServicePostgres
-	servicesRedis   *redis.ServiceRedis
+	services *service.Aggregator
 }
 
-func NewHandler(
-	serviceMongo *mongodb.ServiceMongo,
-	servicePostgre *postgres.ServicePostgres,
-	serviceRedis *redis.ServiceRedis,
-) *Handler {
+func NewHandler(services *service.Aggregator) *Handler {
 	return &Handler{
-		servicesMongo:   serviceMongo,
-		servicesPostgre: servicePostgre,
-		servicesRedis:   serviceRedis,
+		services: services,
 	}
 }
 
