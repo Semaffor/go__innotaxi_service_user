@@ -14,7 +14,11 @@ type Handler struct {
 	servicesRedis   *redis.ServiceRedis
 }
 
-func NewHandler(serviceMongo *mongodb.ServiceMongo, servicePostgre *postgres.ServicePostgres, serviceRedis *redis.ServiceRedis) *Handler {
+func NewHandler(
+	serviceMongo *mongodb.ServiceMongo,
+	servicePostgre *postgres.ServicePostgres,
+	serviceRedis *redis.ServiceRedis,
+) *Handler {
 	return &Handler{
 		servicesMongo:   serviceMongo,
 		servicesPostgre: servicePostgre,

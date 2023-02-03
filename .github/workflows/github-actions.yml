@@ -11,7 +11,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Set env variables
+        env:
+          DB_POSTGRES_PASSWORD: ${{ secrets.DB_POSTGRES_PASSWORD }}
+          DB_MONGO_PASSWORD: ${{ secrets.DB_MONGO_PASSWORD }}
+          JWT_SIGNATURE: ${{ secrets.JWT_SIGNATURE }}
+          TOKEN_TTL_MIN: ${{ secrets.TOKEN_TTL_MIN }}
+        run: |
+
+      - name: Checkout
+        uses: actions/checkout@v3
 
       - name: Set up Go
         uses: actions/setup-go@v3
