@@ -17,7 +17,6 @@ jobs:
           DB_MONGO_PASSWORD: ${{ secrets.DB_MONGO_PASSWORD }}
           JWT_SIGNATURE: ${{ secrets.JWT_SIGNATURE }}
           TOKEN_TTL_MIN: ${{ secrets.TOKEN_TTL_MIN }}
-
         run: |
 
       - name: Checkout

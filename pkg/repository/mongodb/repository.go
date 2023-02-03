@@ -2,8 +2,7 @@ package mongodb
 
 import "github.com/jmoiron/sqlx"
 
-type Logger interface {
-}
+type Logger interface{}
 
 type LogsRepo struct {
 	Logger

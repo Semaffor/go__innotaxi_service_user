@@ -29,23 +29,24 @@ func Run() error {
 	}
 
 	// init repos
-	configPostgres := config.ReadConfig("postgres", &config.ConfigDb{})
+	configPostgres := config.ReadConfig("postgres", &config.ConfigDB{})
 	configPostgres.Password = os.Getenv("DB_POSTGRES_PASSWORD")
 	_ = repositoryPostgres.NewConnection(configPostgres)
 
-	configMongo := config.ReadConfig("mongo", &config.ConfigDb{})
+	configMongo := config.ReadConfig("mongo", &config.ConfigDB{})
 	configMongo.Password = os.Getenv("DB_MONGO_PASSWORD")
 	_ = repositoryMongo.NewConnection(configMongo)
 
 	// init services
-	//
+	initService(nil, nil)
 
-	handlers := handler.NewHandler(nil, nil)
+	handlers := handler.NewHandler(nil, nil, nil)
 
 	server := new(innotaxi.Server)
 	serverConfig := config.ReadConfig("server", &config.ServerConfig{})
 	if err := server.Run(serverConfig, handlers.InitRoutes()); err != nil {
 		log.Println("Error occurred while running.")
+
 		return err
 	}
 
@@ -58,7 +59,7 @@ func initService(dbPostgre, dbMongo *sqlx.DB) *handler.Handler {
 	servMongo := serviceMongo.NewServiceMongo(repoMongo)
 	servPostgre := servicePostgres.NewServicePostgre(repoPostgres)
 
-	return handler.NewHandler(servMongo, servPostgre)
+	return handler.NewHandler(servMongo, servPostgre, nil)
 }
 
 func initConfig(configDir string) error {

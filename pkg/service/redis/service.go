@@ -4,8 +4,7 @@ import (
 	repo "github.com/Semaffor/go__innotaxi_service_user/pkg/repository/redis"
 )
 
-type Authorization interface {
-}
+type Authorization interface{}
 
 type ServiceRedis struct {
 	Authorization
