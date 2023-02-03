@@ -19,7 +19,6 @@ jobs:
           TOKEN_TTL_MIN: ${{ secrets.TOKEN_TTL_MIN }}
         run: |
 
-
       - name: Checkout
         uses: actions/checkout@v3
 
