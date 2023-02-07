@@ -1,6 +1,8 @@
 package user
 
 import (
+	"github.com/guregu/null"
+
 	modelJwt "github.com/Semaffor/go__innotaxi_service_user/pkg/auth/jwt/model"
 	"github.com/Semaffor/go__innotaxi_service_user/pkg/repository/postgres"
 	"github.com/Semaffor/go__innotaxi_service_user/pkg/repository/postgres/model"
@@ -8,7 +10,7 @@ import (
 
 var fakeUserStruct = &model.User{
 	Id:           1,
-	Username:     "Dima",
+	Username:     null.StringFrom("Dima"),
 	PhoneNumber:  "111",
 	Email:        "dd@mail.ru",
 	PasswordHash: "1",
