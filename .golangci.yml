@@ -39,6 +39,10 @@ linters:
     - goerr113
     - gochecknoglobals
     - gomnd
+  # RELEASE TURN ON
+    - unused
+    - testpackage
+    - forbidigo
 linters-settings:
   varnamelen:
     min-name-length: 2
@@ -60,3 +64,8 @@ linters-settings:
   gosec:
     excludes:
       - G404 # Insecure random number source (rand)
+  govet:
+    disable:
+      - composites
+  gosimple:
+    checks: [ "all", "-S1028", "-S1039"]

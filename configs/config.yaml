@@ -6,15 +6,19 @@ server:
   writeTimeout: "10"
 
 postgres:
-  port: "5432"
+  port: "5433"
   host: "localhost"
-  username: "user"
-  dbname: "user"
+  username: "root"
+  dbname: "inno_taxi"
   sslMode: "disable"
 
 mongodb:
-  port: ""
+  port: "5000"
   host: "localhost"
-  username: ""
-  dbname: "log"
+  username: "root"
+  dbname: "logs"
   sslMode: "disable"
+
+redis:
+  port: "5001"
+  host: "localhost"
