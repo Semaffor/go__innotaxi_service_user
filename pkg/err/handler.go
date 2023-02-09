@@ -6,31 +6,31 @@ import (
 	"github.com/Semaffor/go__innotaxi_service_user/pkg/config"
 )
 
-// Exception What the best name for package and this struct?
-type Exception struct {
+// ServiceError What the best name for package and this struct?
+type ServiceError struct {
 	msg string
 }
 
-func (e *Exception) Error() string {
+func (e *ServiceError) Error() string {
 	return e.msg
 }
 
-func EntityNotFoundError(id int) Exception {
-	return Exception{msg: fmt.Sprintf("Entity with id = %d not found", id)}
+func EntityNotFoundError(id int) ServiceError {
+	return ServiceError{msg: fmt.Sprintf("Entity with id = %d not found", id)}
 }
 
-func InvalidCredentialsError() Exception {
-	return Exception{msg: fmt.Sprintf("Invalid username/password")}
+func InvalidCredentialsError() ServiceError {
+	return ServiceError{msg: "Invalid username/password"}
 }
 
-func TokenExpiredError() Exception {
-	return Exception{msg: fmt.Sprintf("Token has expired")}
+func TokenExpiredError() ServiceError {
+	return ServiceError{msg: "Token has expired"}
 }
 
-func DBConnectionError(DBName string, config config.ConfigDB) Exception {
-	return Exception{msg: fmt.Sprintf("Couldn't connect to %s, config: %s", DBName, config)}
+func DBConnectionError(dbName string, config config.ConfigDB) ServiceError {
+	return ServiceError{msg: fmt.Sprintf("Couldn't connect to %s, config: %s", dbName, config)}
 }
 
-func UnsupportedDBError(msg string) Exception {
-	return Exception{msg: msg}
+func UnsupportedDBError(msg string) ServiceError {
+	return ServiceError{msg: msg}
 }
