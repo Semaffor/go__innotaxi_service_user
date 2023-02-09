@@ -26,7 +26,6 @@ type Dao[T ReturnType] struct {
 }
 
 func (d *Dao[T]) Save(params map[string]interface{}) (int, error) {
-
 	query, args := GenerateInsertQuery(d.Table, params)
 	log.Print(query)
 	row := d.Db.QueryRowx(query, args...)
