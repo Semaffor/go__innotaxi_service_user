@@ -11,7 +11,7 @@ output:
 linters:
   enable-all: true
   disable:
-  # deprecated
+    # deprecated
     - deadcode
     - exhaustivestruct
     - golint
@@ -22,11 +22,11 @@ linters:
     - scopelint
     - structcheck
     - varcheck
-  # generics
+    # generics
     - rowserrcheck
     - wastedassign
     - sqlclosecheck
-  #
+    #
     - durationcheck
     - exhaustruct
     - gci
@@ -34,12 +34,13 @@ linters:
     - revive
     - wrapcheck
     - wsl
-  #
+    #
     - nonamedreturns
     - goerr113
     - gochecknoglobals
     - gomnd
-  # RELEASE TURN ON
+    - gofumpt #timeout, used local
+    # RELEASE TURN ON
     - unused
     - testpackage
     - forbidigo
@@ -57,7 +58,7 @@ linters-settings:
       - T any
       - m map[string]int
   stylecheck:
-    checks: ["-ST1003"]
+    checks: [ "-ST1003" ]
   gomnd:
     ignored-numbers:
       - '32'
@@ -68,4 +69,4 @@ linters-settings:
     disable:
       - composites
   gosimple:
-    checks: [ "all", "-S1028", "-S1039"]
+    checks: [ "all", "-S1028", "-S1039" ]
