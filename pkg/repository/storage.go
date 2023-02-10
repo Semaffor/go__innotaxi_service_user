@@ -44,6 +44,7 @@ type Logs interface {
 }
 
 type Tokens interface {
-	SetRefreshToken(ctx context.Context, userID string, tokenID string, expiresIn time.Duration) error
-	DeleteRefreshToken(ctx context.Context, userID string, tokenID string) error
+	SetRefreshToken(ctx context.Context, userID int, tokenID string, expiresIn time.Duration) error
+	DeleteRefreshToken(ctx context.Context, userID int, tokenID string) error
+	DeleteAllUserRefreshTokens(ctx context.Context, userID int) error
 }

@@ -21,12 +21,13 @@ func NewTokenRepository(db *redis.Client) *TokenRepository {
 
 func (r *TokenRepository) SetRefreshToken(
 	ctx context.Context,
-	userID string, tknID string,
+	userID int,
+	tknID string,
 	expiresIn time.Duration,
 ) error {
-	key := fmt.Sprintf("%s:%s", userID, tknID)
+	key := fmt.Sprintf("%d:%s", userID, tknID)
 	if err := r.db.Set(ctx, key, 0, expiresIn).Err(); err != nil {
-		log.Printf("Could not SET refresh token to redis for userID/tknID: %s/%s: %v\n", userID, tknID, err)
+		log.Printf("Could not SET refresh token to redis for userID/tknID: %d/%s: %v\n", userID, tknID, err)
 
 		return err
 	}
@@ -34,18 +35,40 @@ func (r *TokenRepository) SetRefreshToken(
 	return nil
 }
 
-func (r *TokenRepository) DeleteRefreshToken(ctx context.Context, userID string, tokenID string) error {
-	key := fmt.Sprintf("%s:%s", userID, tokenID)
+func (r *TokenRepository) DeleteRefreshToken(ctx context.Context, userID int, tokenID string) error {
+	key := fmt.Sprintf("%d:%s", userID, tokenID)
 	result, err := r.db.Del(ctx, key).Result()
 	if result == 0 {
-		log.Printf("Trying to delete unexisting key: %s", key)
+		log.Printf("Trying to delete unexisting key/s: %s", key)
 	}
 
 	if err != nil {
-		log.Printf("Could not delete refresh token to redis for userID/tokenID: %s/%s: %v\n", userID, tokenID, err)
+		log.Printf("Could not delete refresh token to redis for pattern: %s: %v\n", key, err)
 
 		return err
 	}
 
 	return nil
+}
+
+func (r *TokenRepository) DeleteAllUserRefreshTokens(ctx context.Context, userID int) error {
+	key := fmt.Sprintf("%d:*", userID)
+	iterator := r.FindKeysByPattern(ctx, key)
+
+	var foundedRecordCount int = 0
+	for iterator.Next(ctx) {
+		log.Printf("Deleted= %s\n", iterator.Val())
+		r.db.Del(ctx, iterator.Val())
+		foundedRecordCount++
+	}
+	if err := iterator.Err(); err != nil {
+		return err
+	}
+	log.Printf("Deleted Count %d\n", foundedRecordCount)
+
+	return nil
+}
+
+func (r *TokenRepository) FindKeysByPattern(ctx context.Context, pattern string) *redis.ScanIterator {
+	return r.db.Scan(ctx, 0, pattern, 0).Iterator()
 }
