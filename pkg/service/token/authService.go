@@ -35,7 +35,7 @@ func (s *SessionService) CreateSession(user *model.User) (modelJwt.JwtTokens, er
 		err    error
 	)
 
-	tokens.AccessToken, err = s.Manager.NewJwt(user.Id, user.Username, ttl)
+	tokens.AccessToken, err = s.Manager.NewJwt(user.Id, user.Username.String, ttl)
 	if err != nil {
 		return tokens, err
 	}
