@@ -34,6 +34,12 @@ linters:
     - revive
     - wrapcheck
     - wsl
+  #
+    - nonamedreturns
+    - goerr113
+    - gochecknoglobals
+    - gomnd
+    - nlreturn
 linters-settings:
   varnamelen:
     min-name-length: 2
@@ -41,6 +47,7 @@ linters-settings:
       - err
       - db
     ignore-decls:
+      - c *gin.Context
       - s *Server
       - t testing.T
       - e error
@@ -48,3 +55,9 @@ linters-settings:
       - m map[string]int
   stylecheck:
     checks: ["-ST1003"]
+  gomnd:
+    ignored-numbers:
+      - '32'
+  gosec:
+    excludes:
+      - G404 # Insecure random number source (rand)

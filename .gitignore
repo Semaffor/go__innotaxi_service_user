@@ -1,2 +1,7 @@
 .idea
 .env
+*_test.go
+docker-compose.yaml
+.sql
+.schema
+.pre-commit-config.yaml

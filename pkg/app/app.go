@@ -2,19 +2,14 @@ package app
 
 import (
 	"log"
-	"os"
 
-	"github.com/jmoiron/sqlx"
 	"github.com/joho/godotenv"
-	"github.com/spf13/viper"
 
 	innotaxi "github.com/Semaffor/go__innotaxi_service_user"
 	"github.com/Semaffor/go__innotaxi_service_user/pkg/config"
 	"github.com/Semaffor/go__innotaxi_service_user/pkg/handler"
-	repositoryMongo "github.com/Semaffor/go__innotaxi_service_user/pkg/repository/mongodb"
+	repositoryMongo "github.com/Semaffor/go__innotaxi_service_user/pkg/repository/mongo"
 	repositoryPostgres "github.com/Semaffor/go__innotaxi_service_user/pkg/repository/postgres"
-	serviceMongo "github.com/Semaffor/go__innotaxi_service_user/pkg/service/mongodb"
-	servicePostgres "github.com/Semaffor/go__innotaxi_service_user/pkg/service/postgres"
 )
 
 const configDir = "configs"
@@ -28,43 +23,22 @@ func Run() error {
 		log.Fatalf("Faild to load env data: %s", err.Error())
 	}
 
-	// init repos
-	configPostgres := config.ReadConfig("postgres", &config.ConfigDB{})
-	configPostgres.Password = os.Getenv("DB_POSTGRES_PASSWORD")
-	_ = repositoryPostgres.NewConnection(configPostgres)
+	configPostgres := config.ReadConfig("user", &config.ConfigDB{})
+	postgres := repositoryPostgres.NewConnection(configPostgres)
 
-	configMongo := config.ReadConfig("mongo", &config.ConfigDB{})
-	configMongo.Password = os.Getenv("DB_MONGO_PASSWORD")
-	_ = repositoryMongo.NewConnection(configMongo)
+	configMongo := config.ReadConfig("log", &config.ConfigDB{})
+	mongo := repositoryMongo.NewConnection(configMongo)
 
-	// init services
-	initService(nil, nil)
-
-	handlers := handler.NewHandler(nil, nil, nil)
+	services := initServices(postgres, mongo)
+	newHandler := handler.NewHandler(services)
 
 	server := new(innotaxi.Server)
 	serverConfig := config.ReadConfig("server", &config.ServerConfig{})
-	if err := server.Run(serverConfig, handlers.InitRoutes()); err != nil {
+	if err := server.Run(serverConfig, newHandler.InitRoutes()); err != nil {
 		log.Println("Error occurred while running.")
 
 		return err
 	}
 
 	return nil
-}
-
-func initService(dbPostgre, dbMongo *sqlx.DB) *handler.Handler {
-	repoMongo := repositoryMongo.NewLogsRepository(dbMongo)
-	repoPostgres := repositoryPostgres.NewUserRepository(dbPostgre)
-	servMongo := serviceMongo.NewServiceMongo(repoMongo)
-	servPostgre := servicePostgres.NewServicePostgre(repoPostgres)
-
-	return handler.NewHandler(servMongo, servPostgre, nil)
-}
-
-func initConfig(configDir string) error {
-	viper.AddConfigPath(configDir)
-	viper.SetConfigName("config")
-
-	return viper.ReadInConfig()
 }

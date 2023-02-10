@@ -6,11 +6,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (h *Handler) logIn(ctx *gin.Context) {
+func (h *Handler) GetAll(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, map[string]interface{}{
-		"payload": "example",
+		"test": "ok",
 	})
-}
-
-func (h *Handler) signUp(ctx *gin.Context) {
 }
