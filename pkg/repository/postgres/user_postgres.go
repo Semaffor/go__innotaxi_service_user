@@ -5,20 +5,19 @@ import (
 
 	"github.com/jmoiron/sqlx"
 
-	"github.com/Semaffor/go__innotaxi_service_user/pkg/repository/postgres/dao"
 	"github.com/Semaffor/go__innotaxi_service_user/pkg/repository/postgres/general"
 	"github.com/Semaffor/go__innotaxi_service_user/pkg/repository/postgres/model"
 )
 
 type UserRepository struct {
-	db      *sqlx.DB
-	userDao general.DaoI[model.User]
+	db  *sqlx.DB
+	dao general.DaoI[model.User]
 }
 
 func NewUserRepository(db *sqlx.DB) *UserRepository {
 	return &UserRepository{
-		db:      db,
-		userDao: dao.NewUserDao(db, usersTable),
+		db:  db,
+		dao: NewUserDao(db),
 	}
 }
 
@@ -31,15 +30,11 @@ func (r *UserRepository) Save(ctx context.Context, user *model.User) (int, error
 		"role":          model.USER,
 	}
 
-	return r.userDao.Save(params)
+	return r.dao.Save(params)
 }
 
 func (r *UserRepository) Update(ctx context.Context, user *model.User) error {
 	params := map[string]interface{}{}
-
-	if user.Id != 0 {
-		params["id"] = user.Id
-	}
 
 	if user.Name != "" {
 		params["name"] = user.Name
@@ -61,7 +56,7 @@ func (r *UserRepository) Update(ctx context.Context, user *model.User) error {
 		params["password_hash"] = user.PasswordHash
 	}
 
-	return r.userDao.Update(params, user.Id)
+	return r.dao.Update(params, user.Id)
 }
 
 func (r *UserRepository) DeleteUserById(ctx context.Context, userId int) error {
@@ -69,9 +64,13 @@ func (r *UserRepository) DeleteUserById(ctx context.Context, userId int) error {
 		"is_deleted": true,
 	}
 
-	return r.userDao.Update(params, userId)
+	return r.dao.Update(params, userId)
 }
 
 func (r *UserRepository) FindAll(ctx context.Context) ([]model.User, error) {
-	return r.userDao.FindByFields([]model.User{}, nil)
+	return r.dao.FindByFields([]model.User{}, nil)
+}
+
+func (r *UserRepository) FindByFields(ctx context.Context, params map[string]interface{}) ([]model.User, error) {
+	return r.dao.FindByFields([]model.User{}, params)
 }

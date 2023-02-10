@@ -10,12 +10,12 @@ const (
 )
 
 type Order struct {
-	id         int       `db:"id"`
-	from       string    `db:"from"`
-	to         string    `db:"to"`
-	date       time.Time `db:"date"`
-	status     int       `db:"status"`
-	driverId   int       `db:"driver_id"`
-	taxiTypeId int       `db:"taxi_type_id"`
-	userId     int       `db:"user_id"`
+	Id         int       `db:"id"`
+	From       string    `db:"from"`
+	To         string    `db:"to"`
+	Date       time.Time `db:"date"`
+	Status     int       `db:"status"`
+	DriverId   int       `db:"driver_id"`
+	TaxiTypeId int       `db:"taxi_type_id"`
+	UserId     int       `db:"user_id"`
 }

@@ -12,7 +12,13 @@ import (
 )
 
 const (
-	usersTable = "usr"
+	DriverTable   = "driver"
+	FeedbackTable = "feedback"
+	OrderTable    = "order"
+	RolesTable    = "role"
+	TaxiTypeTable = "taxi_type"
+	UserRoleTable = "usr_role"
+	UsersTable    = "usr"
 )
 
 func NewConnection(cfg *config.ConfigDB) *sqlx.DB {
