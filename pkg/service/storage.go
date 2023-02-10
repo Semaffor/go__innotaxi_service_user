@@ -7,7 +7,7 @@ import (
 )
 
 type AggregatorI interface {
-	GetUserService() *user.Service
-	GetLogService() *log.Service
-	GetAuthService() *token.Service
+	UserService() *user.Service
+	LogService() *log.Service
+	AuthService() *token.Service
 }

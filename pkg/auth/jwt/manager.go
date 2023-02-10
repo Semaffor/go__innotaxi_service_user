@@ -3,6 +3,7 @@ package jwt
 import (
 	"encoding/base32"
 	"fmt"
+	"log"
 	"math/rand"
 	"os"
 	"time"
@@ -11,6 +12,8 @@ import (
 
 	"github.com/Semaffor/go__innotaxi_service_user/pkg/auth/jwt/model"
 )
+
+var signatureDefault = "qwertyu21345"
 
 type TokenManager interface {
 	NewJwt(userId int, username string, ttl time.Duration) (string, error)
@@ -24,6 +27,10 @@ type Manager struct {
 
 func NewManager() *Manager {
 	signature := os.Getenv("JWT_SIGNATURE")
+	if signature == "" {
+		signature = signatureDefault // It's really unsafe, probably use log.Fatal?
+		log.Print("Signature is empty, using default")
+	}
 
 	return &Manager{signature: signature}
 }

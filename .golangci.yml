@@ -39,6 +39,7 @@ linters:
     - goerr113
     - gochecknoglobals
     - gomnd
+    - nlreturn
 linters-settings:
   varnamelen:
     min-name-length: 2

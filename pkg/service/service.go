@@ -7,9 +7,9 @@ import (
 )
 
 type Aggregator struct {
-	servicesMongo   *log.Service
-	servicesPostgre *user.Service
-	servicesRedis   *token.Service
+	log   *log.Service
+	user  *user.Service
+	token *token.Service
 }
 
 func NewAggregator(
@@ -18,20 +18,20 @@ func NewAggregator(
 	servicesRedis *token.Service,
 ) *Aggregator {
 	return &Aggregator{
-		servicesMongo:   servicesMongo,
-		servicesPostgre: servicesPostgre,
-		servicesRedis:   servicesRedis,
+		log:   servicesMongo,
+		user:  servicesPostgre,
+		token: servicesRedis,
 	}
 }
 
 func (s *Aggregator) GetUserService() *user.Service {
-	return s.servicesPostgre
+	return s.user
 }
 
 func (s *Aggregator) GetLogService() *log.Service {
-	return s.servicesMongo
+	return s.log
 }
 
 func (s *Aggregator) GetTokenService() *token.Service {
-	return s.servicesRedis
+	return s.token
 }

@@ -45,7 +45,5 @@ func (s *SessionService) CreateSession(user *model.User) (modelJwt.JwtTokens, er
 		return tokens, err
 	}
 
-	// saveRTinDB
-
 	return tokens, nil
 }
