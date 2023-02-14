@@ -6,7 +6,7 @@ import (
 	"github.com/Semaffor/go__innotaxi_service_user/pkg/config"
 )
 
-func NewConnection(config *config.ConfigDB) *sqlx.DB {
+func NewConnection(config *config.DBConfig) *sqlx.DB {
 	// connection to db
 	return nil
 }

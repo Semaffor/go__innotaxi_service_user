@@ -3,8 +3,6 @@ package app
 import (
 	"log"
 
-	"github.com/joho/godotenv"
-
 	innotaxi "github.com/Semaffor/go__innotaxi_service_user"
 	"github.com/Semaffor/go__innotaxi_service_user/pkg/config"
 	"github.com/Semaffor/go__innotaxi_service_user/pkg/handler"
@@ -12,29 +10,20 @@ import (
 	repositoryPostgres "github.com/Semaffor/go__innotaxi_service_user/pkg/repository/postgres"
 )
 
-const configDir = "configs"
-
 func Run() error {
-	if err := initConfig(configDir); err != nil {
-		log.Fatalf("Can't read configurator file.")
+	configs, err := config.InitConfig()
+	if err != nil {
+		log.Fatalf("Can't read config/env file: %s", err.Error())
 	}
 
-	if err := godotenv.Load(); err != nil {
-		log.Fatalf("Faild to load env data: %s", err.Error())
-	}
-
-	configPostgres := config.ReadConfig("user", &config.ConfigDB{})
-	postgres := repositoryPostgres.NewConnection(configPostgres)
-
-	configMongo := config.ReadConfig("log", &config.ConfigDB{})
-	mongo := repositoryMongo.NewConnection(configMongo)
+	postgres := repositoryPostgres.NewConnection(&configs.Postgres)
+	mongo := repositoryMongo.NewConnection(&configs.Mongo)
 
 	services := initServices(postgres, mongo)
 	newHandler := handler.NewHandler(services)
 
 	server := new(innotaxi.Server)
-	serverConfig := config.ReadConfig("server", &config.ServerConfig{})
-	if err := server.Run(serverConfig, newHandler.InitRoutes()); err != nil {
+	if err := server.Run(&configs.Server, newHandler.InitRoutes()); err != nil {
 		log.Println("Error occurred while running.")
 
 		return err
