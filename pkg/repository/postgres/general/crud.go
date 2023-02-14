@@ -2,7 +2,6 @@ package general
 
 import (
 	"errors"
-	"log"
 
 	"github.com/jmoiron/sqlx"
 
@@ -25,9 +24,10 @@ type Dao[T ReturnType] struct {
 	Table string
 }
 
+// Save method generate insert query with params pointed in input map
+// in the following way: key = field name, value = value to insert in db.
 func (d *Dao[T]) Save(params map[string]interface{}) (int, error) {
 	query, args := GenerateInsertQuery(d.Table, params)
-	log.Print(query)
 	row := d.Db.QueryRowx(query, args...)
 
 	var id int
@@ -38,6 +38,7 @@ func (d *Dao[T]) Save(params map[string]interface{}) (int, error) {
 	return id, nil
 }
 
+// FindByFields generic method which generate select query by pointed map values'.
 func (d *Dao[T]) FindByFields(entities []T, params map[string]interface{}) ([]T, error) {
 	var err error
 	query, args := GenerateSelectQuery(d.Table, params)
@@ -54,6 +55,7 @@ func (d *Dao[T]) FindByFields(entities []T, params map[string]interface{}) ([]T,
 	return entities, nil
 }
 
+// Update generate query and update entity by id in database.
 func (d *Dao[T]) Update(params map[string]interface{}, id int) error {
 	query, args := GenerateUpdateQuery(d.Table, params, id)
 	err := ExecuteQuery(d.Db, query, args)
@@ -64,6 +66,8 @@ func (d *Dao[T]) Update(params map[string]interface{}, id int) error {
 	return nil
 }
 
+// FindOneByFields performs the search of a single result by pointed fields,
+// otherwise returning error.
 func (d *Dao[T]) FindOneByFields(params map[string]interface{}) (*T, error) {
 	entities, err := d.FindByFields([]T{}, params)
 	if err != nil {

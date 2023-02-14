@@ -9,6 +9,7 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+// ExecuteQuery helps to execute queries dynamically with catching corresponding errors.
 func ExecuteQuery(db *sqlx.DB, query string, params []interface{}) error {
 	var (
 		res sql.Result

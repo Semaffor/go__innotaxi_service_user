@@ -5,8 +5,15 @@ import (
 	"strings"
 )
 
-// title?
-func extractFieldsAndArgs(params map[string]interface{}) ([]string, []interface{}) {
+type paramsManipulator struct {
+}
+
+func newParamsManipulator() *paramsManipulator {
+	return &paramsManipulator{}
+}
+
+// extractFieldsAndArgs divides input params on fields names and corresponding args.
+func (m *paramsManipulator) extractFieldsAndArgs(params map[string]interface{}) ([]string, []interface{}) {
 	fields := make([]string, 0)
 	args := make([]interface{}, 0)
 
@@ -18,21 +25,24 @@ func extractFieldsAndArgs(params map[string]interface{}) ([]string, []interface{
 	return fields, args
 }
 
-func extractParamsWithDollar(params map[string]interface{}) (string, []interface{}) {
-	fields, args := extractFieldsAndArgs(params)
-	fieldsWithDollar := appendDollarToFields(fields)
+// extractFieldsAndArgs equals to extractFieldsAndArgs but fields appended with additional symbol.
+func (m *paramsManipulator) extractParamsWithDollar(params map[string]interface{}) (string, []interface{}) {
+	fields, args := m.extractFieldsAndArgs(params)
+	fieldsWithDollar := m.appendDollarToFields(fields)
 	fieldsStr := strings.Join(fieldsWithDollar, ", ")
 
 	return fieldsStr, args
 }
 
-func extractParams(params map[string]interface{}) (string, []interface{}) {
-	fields, args := extractFieldsAndArgs(params)
+// extractParams just creates string from params with delimiter between them.
+func (m *paramsManipulator) extractParams(params map[string]interface{}) (string, []interface{}) {
+	fields, args := m.extractFieldsAndArgs(params)
 
 	return strings.Join(fields, ", "), args
 }
 
-func appendDollarToFields(fields []string) []string {
+// appendDollarToFields add symbol '$1 ... $n' to the fields.
+func (m *paramsManipulator) appendDollarToFields(fields []string) []string {
 	fieldsWithDollar := make([]string, 0)
 	argId := 1
 

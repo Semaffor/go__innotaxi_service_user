@@ -3,26 +3,25 @@ package redis
 import (
 	"context"
 	"fmt"
-	"log"
 
 	"github.com/go-redis/redis/v8"
 
 	"github.com/Semaffor/go__innotaxi_service_user/pkg/config"
 )
 
-func NewConnection(config *config.ConfigDB) *redis.Client {
+func NewConnection(config *config.ConfigDB) (*redis.Client, error) {
 	addr := fmt.Sprintf("%s:%s", config.Host, config.Port)
 	client := redis.NewClient(&redis.Options{
 		Addr:     addr,
-		Password: "",
+		Password: config.Password,
 		DB:       0,
 	})
 
 	if _, err := client.Ping(context.Background()).Result(); err != nil {
-		log.Fatalf("Can't connect to redis: %s", err.Error())
+		return nil, err
 	}
 
-	return client
+	return client, nil
 }
 
 func shutdown(redisDB *redis.Client) error {

@@ -23,11 +23,17 @@ func Run() error {
 		log.Fatalf("Faild to load env data: %s", err.Error())
 	}
 
-	configPostgres := config.ReadConfig("user", &config.ConfigDB{})
-	postgres := repositoryPostgres.NewConnection(configPostgres)
+	configPostgres := config.ReadConfig("postgres", &config.ConfigDB{})
+	postgres, err := repositoryPostgres.NewConnection(configPostgres)
+	if err != nil {
+		log.Fatalf("Can't connected to mongo: %v", configPostgres)
+	}
 
-	configMongo := config.ReadConfig("log", &config.ConfigDB{})
-	mongo := repositoryMongo.NewConnection(configMongo)
+	configMongo := config.ReadConfig("mongo", &config.ConfigDB{})
+	mongo, err := repositoryMongo.NewConnection(configMongo)
+	if err != nil {
+		log.Fatalf("Can't connected to mongo: %v", configMongo)
+	}
 
 	services := initServices(postgres, mongo)
 	newHandler := handler.NewHandler(services)
