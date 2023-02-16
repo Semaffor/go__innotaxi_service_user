@@ -29,7 +29,13 @@ type Dao[T ReturnType] struct {
 // in the following way: key = field name, value = value to insert in db.
 func (d *Dao[T]) Save(params map[string]interface{}) (int, error) {
 	query, args :=
-		builder.NewQueryBuilder(d.Table, params).ExtractFieldsAndArgs().AddDollarToFields().GenerateInsertQuery()
+		builder.NewQueryBuilder(d.Table, params).
+			ExtractFieldsAndArgs().
+			AddDollarToFields().
+			GenerateDollarSequence().
+			SeparateFields().
+			GenerateInsertQuery()
+
 	row := d.Db.QueryRowx(query, args...)
 
 	var id int
@@ -43,7 +49,11 @@ func (d *Dao[T]) Save(params map[string]interface{}) (int, error) {
 // FindByFields generic method which generate select query by pointed map values'.
 func (d *Dao[T]) FindByFields(entities []T, params map[string]interface{}) ([]T, error) {
 	var err error
-	query, args := builder.NewQueryBuilder(d.Table, params).ExtractFieldsAndArgs().GenerateSelectQuery()
+	query, args := builder.NewQueryBuilder(d.Table, params).
+		ExtractFieldsAndArgs().
+		AddDollarToFields().
+		SeparateFields().
+		GenerateSelectQuery()
 
 	if args != nil {
 		err = d.Db.Select(&entities, query, args...)
@@ -59,7 +69,12 @@ func (d *Dao[T]) FindByFields(entities []T, params map[string]interface{}) ([]T,
 
 // Update generate query and update entity by id in database.
 func (d *Dao[T]) Update(params map[string]interface{}, id int) error {
-	query, args := builder.NewQueryBuilder(d.Table, params).ExtractFieldsAndArgs().GenerateUpdateQuery(id)
+	query, args := builder.NewQueryBuilder(d.Table, params).
+		ExtractFieldsAndArgs().
+		AddDollarToFields().
+		SeparateFields().
+		GenerateUpdateQuery(id)
+
 	err := ExecuteQuery(d.Db, query, args)
 	if err != nil {
 		return err

@@ -11,6 +11,7 @@ type QueryBuilder struct {
 	fields         []string
 	args           []interface{}
 	dollarSequence string
+	fieldsAsString string
 }
 
 func NewQueryBuilder(table string, params map[string]interface{}) *QueryBuilder {
@@ -32,17 +33,11 @@ func (qb *QueryBuilder) ExtractFieldsAndArgs() *QueryBuilder {
 	return qb
 }
 
-// ExtractParamsWithDollar equals to extractFieldsAndArgs but fields appended with additional symbol.
-func (qb *QueryBuilder) ExtractParamsWithDollar() *QueryBuilder {
-	qb.AddDollarToFields()
-	qb.separateFields()
+// SeparateFields just creates string from params with delimiter between them.
+func (qb *QueryBuilder) SeparateFields() *QueryBuilder {
+	qb.fieldsAsString = strings.Join(qb.fields, ", ")
 
 	return qb
-}
-
-// separateFields just creates string from params with delimiter between them.
-func (qb *QueryBuilder) separateFields() string {
-	return strings.Join(qb.fields, ", ")
 }
 
 // AddDollarToFields add symbol '$1 ... $n' to the fields.
@@ -59,9 +54,9 @@ func (qb *QueryBuilder) AddDollarToFields() *QueryBuilder {
 	return qb
 }
 
-// generateDollarSequence helps to create string in the following way: '$1, $2, ..., $n'
+// GenerateDollarSequence helps to create string in the following way: '$1, $2, ..., $n'
 // for safe query injection.
-func (qb *QueryBuilder) generateDollarSequence() *QueryBuilder {
+func (qb *QueryBuilder) GenerateDollarSequence() *QueryBuilder {
 	args := make([]string, 0)
 	for i := 1; i <= len(qb.args); i++ {
 		args = append(args, fmt.Sprintf("$%d", i))
