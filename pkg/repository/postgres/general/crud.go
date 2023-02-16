@@ -5,6 +5,7 @@ import (
 
 	"github.com/jmoiron/sqlx"
 
+	"github.com/Semaffor/go__innotaxi_service_user/pkg/repository/postgres/general/builder"
 	"github.com/Semaffor/go__innotaxi_service_user/pkg/repository/postgres/model"
 )
 
@@ -27,7 +28,8 @@ type Dao[T ReturnType] struct {
 // Save method generate insert query with params pointed in input map
 // in the following way: key = field name, value = value to insert in db.
 func (d *Dao[T]) Save(params map[string]interface{}) (int, error) {
-	query, args := GenerateInsertQuery(d.Table, params)
+	query, args :=
+		builder.NewQueryBuilder(d.Table, params).ExtractFieldsAndArgs().AddDollarToFields().GenerateInsertQuery()
 	row := d.Db.QueryRowx(query, args...)
 
 	var id int
@@ -41,7 +43,7 @@ func (d *Dao[T]) Save(params map[string]interface{}) (int, error) {
 // FindByFields generic method which generate select query by pointed map values'.
 func (d *Dao[T]) FindByFields(entities []T, params map[string]interface{}) ([]T, error) {
 	var err error
-	query, args := GenerateSelectQuery(d.Table, params)
+	query, args := builder.NewQueryBuilder(d.Table, params).ExtractFieldsAndArgs().GenerateSelectQuery()
 
 	if args != nil {
 		err = d.Db.Select(&entities, query, args...)
@@ -57,7 +59,7 @@ func (d *Dao[T]) FindByFields(entities []T, params map[string]interface{}) ([]T,
 
 // Update generate query and update entity by id in database.
 func (d *Dao[T]) Update(params map[string]interface{}, id int) error {
-	query, args := GenerateUpdateQuery(d.Table, params, id)
+	query, args := builder.NewQueryBuilder(d.Table, params).ExtractFieldsAndArgs().GenerateUpdateQuery(id)
 	err := ExecuteQuery(d.Db, query, args)
 	if err != nil {
 		return err
