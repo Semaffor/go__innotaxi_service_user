@@ -2,6 +2,7 @@ package go__innotaxi_service_user
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -14,7 +15,7 @@ type Server struct {
 
 func (s *Server) Run(serverConfig *config.ServerConfig, handler http.Handler) error {
 	s.httpServer = &http.Server{
-		Addr:           ":" + serverConfig.Port,
+		Addr:           fmt.Sprintf("%s:%d", serverConfig.Host, serverConfig.Port),
 		Handler:        handler,
 		MaxHeaderBytes: 1 << serverConfig.MaxHeaderBytes, // 1 MB
 		ReadTimeout:    serverConfig.ReadTimeout * time.Second,

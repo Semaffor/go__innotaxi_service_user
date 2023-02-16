@@ -31,8 +31,8 @@ type (
 	}
 
 	ServerConfig struct {
-		Host           string        `mapstructure:"host"  json:"host,omitempty"`
-		Port           string        `mapstructure:"port"  json:"port,omitempty"`
+		Host           string        `mapstructure:"host"`
+		Port           int           `mapstructure:"port"`
 		MaxHeaderBytes int           `mapstructure:"maxHeaderBytes" `
 		ReadTimeout    time.Duration `mapstructure:"readTimeout" `
 		WriteTimeout   time.Duration `mapstructure:"writeTimeout"`
@@ -40,7 +40,7 @@ type (
 
 	DBConfig struct {
 		Host     string `mapstructure:"host"`
-		Port     string `mapstructure:"port"`
+		Port     int    `mapstructure:"port"`
 		Username string `mapstructure:"username"`
 		DBName   string `mapstructure:"dbName"`
 		SslMode  string `mapstructure:"sslMode"`
@@ -109,6 +109,9 @@ func unmarshal(cfg *Config) error {
 		return err
 	}
 	if err := viper.UnmarshalKey("mongodb", &cfg.Mongo); err != nil {
+		return err
+	}
+	if err := viper.UnmarshalKey("redis", &cfg.Redis); err != nil {
 		return err
 	}
 	if err := viper.UnmarshalKey("auth", &cfg.AuthConfig.JWT); err != nil {
