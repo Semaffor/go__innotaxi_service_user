@@ -12,8 +12,8 @@ import (
 	"github.com/Semaffor/go__innotaxi_service_user/pkg/config"
 )
 
-func NewConnection(config *config.ConfigDB) (*mongo.Database, error) {
-	addr := net.JoinHostPort(config.Host, config.Port)
+func NewConnection(config *config.DBConfig) (*mongo.Database, error) {
+	addr := net.JoinHostPort(config.Host, string(rune(config.Port)))
 	uri := fmt.Sprintf("mongodb://%s:%s@%s/", config.Username, config.Password, addr)
 	client, err := mongo.Connect(context.Background(), options.Client().ApplyURI(uri))
 	if err != nil {

@@ -9,8 +9,8 @@ import (
 	"github.com/Semaffor/go__innotaxi_service_user/pkg/config"
 )
 
-func NewConnection(cfg *config.ConfigDB) (*sqlx.DB, error) {
-	connStr := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=%s",
+func NewConnection(cfg *config.DBConfig) (*sqlx.DB, error) {
+	connStr := fmt.Sprintf("host=%s port=%d user=%s dbname=%s password=%s sslmode=%s",
 		cfg.Host, cfg.Port, cfg.Username, cfg.DBName, cfg.Password, cfg.SslMode)
 
 	db, err := sqlx.Connect("postgres", connStr)

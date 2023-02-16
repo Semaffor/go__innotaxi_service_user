@@ -2,7 +2,6 @@ package app
 
 import (
 	"github.com/jmoiron/sqlx"
-	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/mongo"
 
 	repositoryMongo "github.com/Semaffor/go__innotaxi_service_user/pkg/repository/mongo"
@@ -12,18 +11,11 @@ import (
 	servicePostgres "github.com/Semaffor/go__innotaxi_service_user/pkg/service/user"
 )
 
-func initServices(postgresDB *sqlx.DB, mongoDB *mongo.Database) *service.Aggregator {
-	postgres := initPostgres(postgresDB)
-	mongo := initMongo(mongoDB)
+func initServices(dbPostgre *sqlx.DB, dbMongo *mongo.Database) *service.Aggregator {
+	postgresCon := initPostgres(dbPostgre)
+	mongoCon := initMongo(dbMongo)
 
-	return service.NewAggregator(mongo, postgres, nil)
-}
-
-func initConfig(configDir string) error {
-	viper.AddConfigPath(configDir)
-	viper.SetConfigName("config")
-
-	return viper.ReadInConfig()
+	return service.NewAggregator(mongoCon, postgresCon, nil)
 }
 
 func initMongo(dbConnection *mongo.Database) *serviceMongo.Service {

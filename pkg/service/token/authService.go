@@ -1,19 +1,10 @@
 package token
 
 import (
-	"os"
-	"time"
-
 	"github.com/Semaffor/go__innotaxi_service_user/pkg/auth/jwt"
 	modelJwt "github.com/Semaffor/go__innotaxi_service_user/pkg/auth/jwt/model"
-	"github.com/Semaffor/go__innotaxi_service_user/pkg/helpers"
 	"github.com/Semaffor/go__innotaxi_service_user/pkg/repository/postgres/model"
 	repoRedis "github.com/Semaffor/go__innotaxi_service_user/pkg/repository/redis"
-)
-
-var (
-	ttl                = time.Duration(helpers.ConvertToInt(os.Getenv("TOKEN_TTL_MIN"), 20)) * time.Minute
-	refreshTokenLength = helpers.ConvertToInt(os.Getenv("REFRESH_TOKEN_LENGTH"), 40)
 )
 
 type SessionService struct {
@@ -35,12 +26,12 @@ func (s *SessionService) CreateSession(user *model.User) (modelJwt.JwtTokens, er
 		err    error
 	)
 
-	tokens.AccessToken, err = s.Manager.NewJwt(user.Id, user.Username.String, ttl)
+	tokens.AccessToken, err = s.Manager.NewJwt(user.Id, user.Username.String, s.Config.AccessTokenTTL)
 	if err != nil {
 		return tokens, err
 	}
 
-	tokens.RefreshToken, err = s.Manager.NewRefreshToken(refreshTokenLength)
+	tokens.RefreshToken, err = s.Manager.NewRefreshToken(s.Config.RefreshTokenLength)
 	if err != nil {
 		return tokens, err
 	}

@@ -3,17 +3,14 @@ package jwt
 import (
 	"encoding/base32"
 	"fmt"
-	"log"
 	"math/rand"
-	"os"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
 
 	"github.com/Semaffor/go__innotaxi_service_user/pkg/auth/jwt/model"
+	"github.com/Semaffor/go__innotaxi_service_user/pkg/config"
 )
-
-var signatureDefault = "qwertyu21345"
 
 type TokenManager interface {
 	NewJwt(userId int, username string, ttl time.Duration) (string, error)
@@ -22,17 +19,12 @@ type TokenManager interface {
 }
 
 type Manager struct {
-	signature string
+	Config    *config.JWTConfig
+	Signature string
 }
 
-func NewManager() *Manager {
-	signature := os.Getenv("JWT_SIGNATURE")
-	if signature == "" {
-		signature = signatureDefault // It's really unsafe, probably use log.Fatal?
-		log.Print("Signature is empty, using default")
-	}
-
-	return &Manager{signature: signature}
+func NewManager(config *config.JWTConfig) *Manager {
+	return &Manager{Config: config, Signature: config.SigningKey}
 }
 
 func (m *Manager) NewJwt(userId int, role string, ttl time.Duration) (string, error) {
@@ -45,7 +37,7 @@ func (m *Manager) NewJwt(userId int, role string, ttl time.Duration) (string, er
 		Role:   role,
 	})
 
-	return token.SignedString([]byte(m.signature))
+	return token.SignedString([]byte(m.Signature))
 }
 
 func (m *Manager) ParseJwt(jwtToken string) (map[string]interface{}, error) {
@@ -54,7 +46,7 @@ func (m *Manager) ParseJwt(jwtToken string) (map[string]interface{}, error) {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
 
-		return []byte(m.signature), nil
+		return []byte(m.Signature), nil
 	})
 	if err != nil {
 		return nil, err
