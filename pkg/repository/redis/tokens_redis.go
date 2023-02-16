@@ -2,11 +2,15 @@ package redis
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
+	"strings"
 	"time"
 
 	"github.com/go-redis/redis/v8"
+
+	"github.com/Semaffor/go__innotaxi_service_user/pkg/repository/redis/model"
 )
 
 type TokenRepository struct {
@@ -28,11 +32,39 @@ func (r *TokenRepository) SetRefreshToken(
 	key := fmt.Sprintf("%d:%s", userID, tknID)
 	if err := r.db.Set(ctx, key, 0, expiresIn).Err(); err != nil {
 		log.Printf("Could not SET refresh token to redis for userID/tknID: %d/%s: %v\n", userID, tknID, err)
-
 		return err
 	}
 
 	return nil
+}
+
+func (r *TokenRepository) GetByRefreshToken(ctx context.Context, refreshToken string) (*model.Record, error) {
+	keyPattern := fmt.Sprintf("*:%s", refreshToken)
+	return r.GetByKey(ctx, keyPattern)
+}
+
+func (r *TokenRepository) GetByKey(ctx context.Context, keyPattern string) (*model.Record, error) {
+	iterator := r.FindKeysByPattern(ctx, keyPattern)
+
+	if !iterator.Next(ctx) {
+		return nil, fmt.Errorf("keyPattern %s doesn't exist", keyPattern)
+	}
+	if err := iterator.Err(); err != nil {
+		return nil, err
+	}
+
+	key := iterator.Val()
+	val, err := r.db.Get(ctx, key).Result()
+	if errors.Is(err, redis.Nil) {
+		return nil, fmt.Errorf("keyPattern %s not found", keyPattern)
+	}
+
+	splitKey := strings.Split(key, ":")
+
+	return &model.Record{
+		UserId: splitKey[0],
+		Role:   val,
+	}, nil
 }
 
 func (r *TokenRepository) DeleteRefreshToken(ctx context.Context, userID int, tokenID string) error {
@@ -44,7 +76,6 @@ func (r *TokenRepository) DeleteRefreshToken(ctx context.Context, userID int, to
 
 	if err != nil {
 		log.Printf("Could not delete refresh token to redis for pattern: %s: %v\n", key, err)
-
 		return err
 	}
 
