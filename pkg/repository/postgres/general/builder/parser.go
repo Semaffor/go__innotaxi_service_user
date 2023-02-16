@@ -6,12 +6,12 @@ import (
 )
 
 type QueryBuilder struct {
-	table          string
-	params         map[string]interface{}
-	fields         []string
-	args           []interface{}
-	dollarSequence string
-	fieldsAsString string
+	table          string                 // table name in database
+	params         map[string]interface{} // input params' like '"key":"value"'
+	fields         []string               // only fields' name from params
+	args           []interface{}          // only values' from params
+	dollarSequence string                 // presentation of insert symbols in format '$1 ... $n'
+	fieldsAsString string                 // presentation of field' names in format like string separated with a comma
 }
 
 func NewQueryBuilder(table string, params map[string]interface{}) *QueryBuilder {
