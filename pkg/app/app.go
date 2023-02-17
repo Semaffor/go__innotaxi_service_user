@@ -16,8 +16,15 @@ func Run() error {
 		log.Fatalf("Can't read config/env file: %s", err.Error())
 	}
 
-	postgres, _ := repositoryPostgres.NewConnection(&configs.Postgres)
-	mongo, _ := repositoryMongo.NewConnection(&configs.Mongo)
+	postgres, err := repositoryPostgres.NewConnection(&configs.Postgres)
+	if err != nil {
+		return err
+	}
+
+	mongo, err := repositoryMongo.NewConnection(&configs.Mongo)
+	if err != nil {
+		return err
+	}
 
 	services := initServices(postgres, mongo)
 	newHandler := handler.NewHandler(services)
@@ -25,7 +32,6 @@ func Run() error {
 	server := new(innotaxi.Server)
 	if err := server.Run(&configs.Server, newHandler.InitRoutes()); err != nil {
 		log.Println("Error occurred while running.")
-
 		return err
 	}
 
