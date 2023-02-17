@@ -65,7 +65,7 @@ func TokenExpiredError() error {
 	return NewCodeError(Token, "Token has expired.")
 }
 
-func DBConnectionError(dbName string, config config.ConfigDB) error {
+func DBConnectionError(dbName string, config config.DBConfig) error {
 	return NewCodeError(Database, fmt.Sprintf("Couldn't connect to %s, config: %v", dbName, config))
 }
 

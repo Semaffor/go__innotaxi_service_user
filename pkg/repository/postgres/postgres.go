@@ -2,19 +2,21 @@ package postgres
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/jmoiron/sqlx"
+	_ "github.com/lib/pq"
 
 	"github.com/Semaffor/go__innotaxi_service_user/pkg/config"
 )
 
-func NewConnection(config *config.DBConfig) *sqlx.DB {
-	db, err := sqlx.Open("user", fmt.Sprintf("host=%s port=%d username=%s password=%s dbname=%s sslmode=%s",
-		config.Host, config.Port, config.Username, config.Password, config.DBName, config.SslMode))
+func NewConnection(cfg *config.DBConfig) (*sqlx.DB, error) {
+	connStr := fmt.Sprintf("host=%s port=%d user=%s dbname=%s password=%s sslmode=%s",
+		cfg.Host, cfg.Port, cfg.Username, cfg.DBName, cfg.Password, cfg.SslMode)
+
+	db, err := sqlx.Connect("postgres", connStr)
 	if err != nil {
-		log.Fatalf("Can't connect to mongoDB: %s", err.Error())
+		return nil, err
 	}
 
-	return db
+	return db, nil
 }

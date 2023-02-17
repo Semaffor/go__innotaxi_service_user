@@ -2,6 +2,7 @@ package app
 
 import (
 	"github.com/jmoiron/sqlx"
+	"go.mongodb.org/mongo-driver/mongo"
 
 	repositoryMongo "github.com/Semaffor/go__innotaxi_service_user/pkg/repository/mongo"
 	repositoryPostgres "github.com/Semaffor/go__innotaxi_service_user/pkg/repository/postgres"
@@ -10,14 +11,14 @@ import (
 	servicePostgres "github.com/Semaffor/go__innotaxi_service_user/pkg/service/user"
 )
 
-func initServices(dbPostgre, dbMongo *sqlx.DB) *service.Aggregator {
-	postgres := initPostgres(dbPostgre)
-	mongo := initMongo(dbMongo)
+func initServices(dbPostgre *sqlx.DB, dbMongo *mongo.Database) *service.Aggregator {
+	postgresCon := initPostgres(dbPostgre)
+	mongoCon := initMongo(dbMongo)
 
-	return service.NewAggregator(mongo, postgres, nil)
+	return service.NewAggregator(mongoCon, postgresCon, nil)
 }
 
-func initMongo(dbConnection *sqlx.DB) *serviceMongo.Service {
+func initMongo(dbConnection *mongo.Database) *serviceMongo.Service {
 	repoMongo := repositoryMongo.NewLogsRepository(dbConnection)
 
 	return serviceMongo.NewService(repoMongo)

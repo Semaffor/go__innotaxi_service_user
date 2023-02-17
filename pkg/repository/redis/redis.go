@@ -1,21 +1,33 @@
 package redis
 
 import (
+	"context"
 	"fmt"
 
-	rediska "github.com/go-redis/redis/v8"
+	"github.com/go-redis/redis/v8"
 
 	"github.com/Semaffor/go__innotaxi_service_user/pkg/config"
 )
 
-func NewConnection(config *config.DBConfig) (*rediska.Client, error) {
+func NewConnection(config *config.DBConfig) (*redis.Client, error) {
 	addr := fmt.Sprintf("%s:%d", config.Host, config.Port)
-	client := rediska.NewClient(&rediska.Options{
+	client := redis.NewClient(&redis.Options{
 		Addr:     addr,
 		Password: config.Password,
 		DB:       0,
 	})
-	_, err := client.Ping(client.Context()).Result()
 
-	return client, err
+	if _, err := client.Ping(context.Background()).Result(); err != nil {
+		return nil, err
+	}
+
+	return client, nil
+}
+
+func shutdown(redisDB *redis.Client) error {
+	if err := redisDB.Close(); err != nil {
+		return fmt.Errorf("error closing Redis Client: %w", err)
+	}
+
+	return nil
 }
