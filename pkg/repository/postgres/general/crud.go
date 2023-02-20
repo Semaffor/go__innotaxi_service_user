@@ -93,7 +93,7 @@ func (d *Dao[T]) FindOneByFields(params map[string]interface{}) (*T, error) {
 		return nil, errors.New("more than 1 entity found")
 	}
 	if len(entities) == 0 {
-		return nil, nil
+		return &T{}, nil
 	}
 
 	return &entities[0], err

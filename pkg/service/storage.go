@@ -28,5 +28,5 @@ type User interface {
 }
 
 type Logger interface {
-	WriteLog(ctx context.Context, log string) error // TODO Struct
+	WriteLog(ctx context.Context, log string) error
 }

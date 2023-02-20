@@ -71,3 +71,5 @@ linters-settings:
       - composites
   gosimple:
     checks: [ "all", "-S1028", "-S1039" ]
+  errorlint:
+    asserts: false
