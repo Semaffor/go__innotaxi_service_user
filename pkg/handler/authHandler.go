@@ -52,3 +52,41 @@ func (h *Handler) signUp(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, errbase.NewJSONSuccessResponse(nil))
 }
+
+func (h *Handler) userRefresh(ctx *gin.Context) {
+	var input model.RefreshInput
+	if err := ctx.BindJSON(&input); err != nil {
+		errbase.NewErrorResponse(ctx, errbase.InvalidInput(err))
+		return
+	}
+
+	res, err := h.services.TokenService().RefreshTokens(ctx.Request.Context(), input.Token)
+	if err != nil {
+		errbase.NewErrorResponse(ctx, err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, errbase.NewJSONSuccessResponse(
+		model.JwtTokens{
+			AccessToken:  res.AccessToken,
+			RefreshToken: res.RefreshToken,
+		}),
+	)
+}
+
+func (h *Handler) logout(ctx *gin.Context) {
+	var input model.RefreshInput
+	if err := ctx.BindJSON(&input); err != nil {
+		errbase.NewErrorResponse(ctx, errbase.InvalidInput(err))
+		return
+	}
+
+	userId := ctx.GetInt(claimId)
+	err := h.services.TokenService().LogoutSingle(ctx, userId, input.Token)
+	if err != nil {
+		errbase.NewErrorResponse(ctx, err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, errbase.NewJSONSuccessResponse(nil))
+}
