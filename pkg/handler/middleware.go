@@ -3,13 +3,13 @@ package handler
 import (
 	"errors"
 	"fmt"
-	"net/http"
 	"strings"
 
 	jwtLib "github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 
 	"github.com/Semaffor/go__innotaxi_service_user/pkg/auth/jwt/model"
+	"github.com/Semaffor/go__innotaxi_service_user/pkg/errbase"
 )
 
 const (
@@ -18,18 +18,18 @@ const (
 	claimRole           = "role"
 )
 
-func (h *Handler) UserIdentity(c *gin.Context) {
-	claims, err := h.checkIsAuth(c)
+func (h *Handler) userIdentity(ctx *gin.Context) {
+	claims, err := h.checkIsAuth(ctx)
 	if err != nil {
-		NewErrorResponse(c, http.StatusUnauthorized, err.Error())
+		errbase.NewErrorResponse(ctx, err)
 	}
 
-	c.Set(claimId, claims.Id)
-	c.Set(claimRole, claims.Role)
+	ctx.Set(claimId, claims.Id)
+	ctx.Set(claimRole, claims.Role)
 }
 
-func (h *Handler) checkIsAuth(c *gin.Context) (*model.JwtClaims, error) {
-	header := c.GetHeader(authorizationHeader)
+func (h *Handler) checkIsAuth(ctx *gin.Context) (*model.JwtClaims, error) {
+	header := ctx.GetHeader(authorizationHeader)
 	if header == "" {
 		return nil, errors.New("empty auth header")
 	}
@@ -42,7 +42,7 @@ func (h *Handler) checkIsAuth(c *gin.Context) (*model.JwtClaims, error) {
 	if len(headerParts[1]) == 0 {
 		return nil, errors.New("token is empty")
 	}
-	claimsMap, err := h.services.GetTokenService().Authorization.GetAuthManager().ParseJwt(headerParts[1])
+	claimsMap, err := h.services.TokenService().AuthManager().ParseJwt(headerParts[1])
 	if err != nil {
 		return nil, err
 	}

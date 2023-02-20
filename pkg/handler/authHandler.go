@@ -6,32 +6,49 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/Semaffor/go__innotaxi_service_user/pkg/auth/jwt/model"
+	"github.com/Semaffor/go__innotaxi_service_user/pkg/errbase"
+	form "github.com/Semaffor/go__innotaxi_service_user/pkg/handler/model"
 )
 
 func (h *Handler) logIn(ctx *gin.Context) {
-	userCredentials := model.UserCredentials{}
+	var userCredentials form.UserLoginInput
 	if err := ctx.BindJSON(&userCredentials); err != nil {
-		NewErrorResponse(ctx, http.StatusBadRequest, "Invalid user data")
+		errbase.NewErrorResponse(ctx, errbase.InvalidInput(err))
 		return
 	}
 
-	user, err := h.services.GetUserService().Authentication(&userCredentials)
+	user, err := h.services.UserService().Authenticate(ctx, &userCredentials)
 	if err != nil {
-		NewErrorResponse(ctx, http.StatusBadRequest, err.Error())
+		errbase.NewErrorResponse(ctx, err)
 		return
 	}
 
-	res, err := h.services.GetTokenService().Authorization.CreateSession(&user)
+	res, err := h.services.TokenService().CreateSession(ctx, user.Id, user.Role)
 	if err != nil {
-		NewErrorResponse(ctx, http.StatusBadRequest, err.Error())
+		errbase.NewErrorResponse(ctx, err)
 		return
 	}
 
-	ctx.JSON(http.StatusOK, model.JwtTokens{
-		AccessToken:  res.AccessToken,
-		RefreshToken: res.RefreshToken,
-	})
+	ctx.JSON(http.StatusOK, errbase.NewJSONSuccessResponse(
+		model.JwtTokens{
+			AccessToken:  res.AccessToken,
+			RefreshToken: res.RefreshToken,
+		}),
+	)
 }
 
 func (h *Handler) signUp(ctx *gin.Context) {
+	var user form.UserRegistrationInput
+	if err := ctx.ShouldBindJSON(&user); err != nil {
+		errbase.NewErrorResponse(ctx, errbase.InvalidInput(err))
+		return
+	}
+
+	err := h.services.UserService().Register(ctx, &user)
+	if err != nil {
+		errbase.NewErrorResponse(ctx, err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, errbase.NewJSONSuccessResponse(nil))
 }

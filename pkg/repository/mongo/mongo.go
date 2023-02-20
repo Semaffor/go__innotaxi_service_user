@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net"
+	"strconv"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -13,7 +14,7 @@ import (
 )
 
 func NewConnection(config *config.DBConfig) (*mongo.Database, error) {
-	addr := net.JoinHostPort(config.Host, string(rune(config.Port)))
+	addr := net.JoinHostPort(config.Host, strconv.Itoa(config.Port))
 	uri := fmt.Sprintf("mongodb://%s:%s@%s/", config.Username, config.Password, addr)
 	client, err := mongo.Connect(context.Background(), options.Client().ApplyURI(uri))
 	if err != nil {

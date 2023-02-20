@@ -10,6 +10,7 @@ import (
 
 	"github.com/go-redis/redis/v8"
 
+	"github.com/Semaffor/go__innotaxi_service_user/pkg/errbase"
 	"github.com/Semaffor/go__innotaxi_service_user/pkg/repository/redis/model"
 )
 
@@ -67,16 +68,15 @@ func (r *TokenRepository) GetByKey(ctx context.Context, keyPattern string) (*mod
 	}, nil
 }
 
-func (r *TokenRepository) DeleteRefreshToken(ctx context.Context, userID int, tokenID string) error {
-	key := fmt.Sprintf("%d:%s", userID, tokenID)
+func (r *TokenRepository) DeleteRefreshToken(ctx context.Context, userID int, refreshToken string) error {
+	key := fmt.Sprintf("%d:%s", userID, refreshToken)
 	result, err := r.db.Del(ctx, key).Result()
 	if result == 0 {
-		log.Printf("Trying to delete unexisting key/s: %s", key)
+		return errbase.KeyNotFoundError(key)
 	}
 
 	if err != nil {
-		log.Printf("Could not delete refresh token to redis for pattern: %s: %v\n", key, err)
-		return err
+		return errbase.DatabaseError(fmt.Sprintf("Could not delete refresh token to redis by pattern: %s: %v\n", key, err))
 	}
 
 	return nil

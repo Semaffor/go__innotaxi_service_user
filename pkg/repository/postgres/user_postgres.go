@@ -74,3 +74,19 @@ func (r *UserRepository) FindAll(ctx context.Context) ([]model.User, error) {
 func (r *UserRepository) FindByFields(ctx context.Context, params map[string]interface{}) ([]model.User, error) {
 	return r.dao.FindByFields([]model.User{}, params)
 }
+
+func (r *UserRepository) FindByPhoneNumber(ctx context.Context, phoneNumber string) (*model.User, error) {
+	params := map[string]interface{}{
+		"phone_number": phoneNumber,
+	}
+
+	return r.dao.FindOneByFields(params)
+}
+
+func (r *UserRepository) FindByUsername(ctx context.Context, username string) (*model.User, error) {
+	params := map[string]interface{}{
+		"username": username,
+	}
+
+	return r.dao.FindOneByFields(params)
+}
