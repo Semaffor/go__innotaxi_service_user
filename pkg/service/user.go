@@ -56,7 +56,7 @@ func (u *UserService) Register(ctx context.Context, formUser *form.UserRegistrat
 	if err != nil {
 		return err
 	}
-	if findByPhoneNumber != nil && !findByPhoneNumber.IsDeleted {
+	if findByPhoneNumber.Id != 0 && !findByPhoneNumber.IsDeleted {
 		return errbase.AlreadyExistsError("phone_number", formUser.PhoneNumber)
 	}
 
