@@ -3,6 +3,8 @@ package service
 import (
 	"context"
 
+	"github.com/guregu/null"
+
 	"github.com/Semaffor/go__innotaxi_service_user/pkg/errbase"
 	form "github.com/Semaffor/go__innotaxi_service_user/pkg/handler/model"
 	"github.com/Semaffor/go__innotaxi_service_user/pkg/hash"
@@ -71,4 +73,25 @@ func (u *UserService) Register(ctx context.Context, formUser *form.UserRegistrat
 	}
 
 	return nil
+}
+
+func (u *UserService) UpdateUser(ctx context.Context, formUser *form.UserUpdateInput) error {
+	var username null.String
+	if formUser.Username != "" {
+		username = null.StringFrom(formUser.Username)
+	}
+
+	pgUser := pgModel.User{
+		Id:          formUser.Id,
+		Name:        formUser.Name,
+		Username:    username,
+		PhoneNumber: formUser.PhoneNumber,
+		Email:       formUser.Email,
+	}
+
+	return u.repo.Update(ctx, &pgUser)
+}
+
+func (u *UserService) DeleteUser(ctx context.Context, userId int) error {
+	return u.repo.DeleteUserById(ctx, userId)
 }

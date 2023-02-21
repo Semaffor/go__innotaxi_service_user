@@ -6,7 +6,7 @@ import (
 	"github.com/Semaffor/go__innotaxi_service_user/pkg/auth/jwt"
 	modelJwt "github.com/Semaffor/go__innotaxi_service_user/pkg/auth/jwt/model"
 	form "github.com/Semaffor/go__innotaxi_service_user/pkg/handler/model"
-	"github.com/Semaffor/go__innotaxi_service_user/pkg/repository/postgres/model"
+	pgModel "github.com/Semaffor/go__innotaxi_service_user/pkg/repository/postgres/model"
 )
 
 type Service interface {
@@ -23,8 +23,10 @@ type Tokens interface {
 }
 
 type User interface {
-	Authenticate(ctx context.Context, credentials *form.UserLoginInput) (*model.User, error)
+	Authenticate(ctx context.Context, credentials *form.UserLoginInput) (*pgModel.User, error)
 	Register(ctx context.Context, user *form.UserRegistrationInput) error
+	UpdateUser(ctx context.Context, formUser *form.UserUpdateInput) error
+	DeleteUser(ctx context.Context, userId int) error
 }
 
 type Logger interface {

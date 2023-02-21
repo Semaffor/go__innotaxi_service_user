@@ -28,6 +28,8 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		api := auth.Group("", h.userIdentity)
 		{
 			api.POST("/logout", h.logout)
+			api.PATCH("/", h.updateData)
+			api.DELETE("/", h.deleteUser)
 		}
 	}
 
