@@ -81,7 +81,7 @@ func (h *Handler) logout(ctx *gin.Context) {
 		return
 	}
 
-	userId := ctx.GetInt(claimId)
+	userId := ctx.GetInt(ClaimId)
 	err := h.services.TokenService().LogoutSingle(ctx, userId, input.Token)
 	if err != nil {
 		errbase.NewErrorResponse(ctx, err)

@@ -14,33 +14,34 @@ import (
 
 const (
 	authorizationHeader = "Authorization"
-	claimId             = "userId"
-	claimRole           = "role"
+	ClaimId             = "userId"
+	ClaimRole           = "role"
 )
 
 func (h *Handler) userIdentity(ctx *gin.Context) {
 	claims, err := h.checkIsAuth(ctx)
 	if err != nil {
 		errbase.NewErrorResponse(ctx, err)
+		return
 	}
 
-	ctx.Set(claimId, claims.Id)
-	ctx.Set(claimRole, claims.Role)
+	ctx.Set(ClaimId, claims.UserId)
+	ctx.Set(ClaimRole, claims.Role)
 }
 
 func (h *Handler) checkIsAuth(ctx *gin.Context) (*model.JwtClaims, error) {
 	header := ctx.GetHeader(authorizationHeader)
 	if header == "" {
-		return nil, errors.New("empty auth header")
+		return nil, errbase.InvalidCredentialsError("empty auth header")
 	}
 
 	headerParts := strings.Split(header, " ")
 	if len(headerParts) != 2 || headerParts[0] != "Bearer" {
-		return nil, errors.New("invalid auth header")
+		return nil, errbase.InvalidCredentialsError("empty auth header")
 	}
 
 	if len(headerParts[1]) == 0 {
-		return nil, errors.New("token is empty")
+		return nil, errbase.InvalidCredentialsError("token is empty")
 	}
 	claimsMap, err := h.services.TokenService().AuthManager().ParseJwt(headerParts[1])
 	if err != nil {
@@ -56,14 +57,18 @@ func (h *Handler) checkIsAuth(ctx *gin.Context) (*model.JwtClaims, error) {
 }
 
 func grabFields(claims map[string]interface{}) (*model.JwtClaims, error) {
-	id, ok := claims[claimId].(int)
-	if !ok || id == 0 {
-		return nil, fmt.Errorf("incorrect data in field `%s`: %d", claimId, id)
+	idFloat, ok := claims[ClaimId].(float64)
+	if !ok {
+		return nil, errors.New("type assertion error")
+	}
+	id := int(idFloat)
+	if id == 0 {
+		return nil, errbase.InvalidCredentialsError(fmt.Sprintf("incorrect id in field `%s`: %d", ClaimId, id))
 	}
 
-	role, ok := claims[claimRole].(string)
+	role, ok := claims[ClaimRole].(string)
 	if !ok || role == "" {
-		return nil, fmt.Errorf("incorrect data in field `%s`: %d", claimRole, id)
+		return nil, errbase.InvalidCredentialsError(fmt.Sprintf("incorrect data in field `%s`: %s", ClaimRole, role))
 	}
 
 	return &model.JwtClaims{
