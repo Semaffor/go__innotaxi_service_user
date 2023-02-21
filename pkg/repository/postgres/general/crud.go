@@ -31,7 +31,6 @@ func (d *Dao[T]) Save(params map[string]interface{}) (int, error) {
 	query, args :=
 		builder.NewQueryBuilder(d.Table, params).
 			ExtractFieldsAndArgs().
-			AddDollarToFields().
 			GenerateDollarSequence().
 			SeparateFields().
 			GenerateInsertQuery()
@@ -90,9 +89,11 @@ func (d *Dao[T]) FindOneByFields(params map[string]interface{}) (*T, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	if len(entities) > 1 {
 		return nil, errors.New("more than 1 entity found")
+	}
+	if len(entities) == 0 {
+		return &T{}, nil
 	}
 
 	return &entities[0], err

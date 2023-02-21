@@ -6,9 +6,9 @@ import (
 
 // Roles.
 const (
-	USER    = 1
-	DRIVER  = 2
-	ANALYST = 3
+	USER    = "user"
+	DRIVER  = "driver"
+	ANALYST = "analyst"
 )
 
 type User struct {
@@ -18,7 +18,7 @@ type User struct {
 	PhoneNumber  string      `db:"phone_number"`
 	Email        string      `db:"email"`
 	PasswordHash string      `db:"password_hash"`
-	Role         int         `db:"role"` // Better int - safe disk capacity or string - increase readability?
+	Role         string      `db:"role"`
 	TotalMark    null.Float  `db:"total_mark"`
 	IsDeleted    bool        `db:"is_deleted"`
 }

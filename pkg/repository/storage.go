@@ -32,8 +32,9 @@ func NewRepositories(postgresDB *sqlx.DB, mongoDB *mongo.Database, redisDB *redi
 
 type Users interface {
 	DeleteUserById(ctx context.Context, userId int) error
+	FindByPhoneNumber(ctx context.Context, phoneNumber string) (*pgModel.User, error)
+	FindByUsername(ctx context.Context, phoneNumber string) (*pgModel.User, error)
 	FindAll(ctx context.Context) ([]pgModel.User, error)
-	FindByFields(ctx context.Context, params map[string]interface{}) ([]pgModel.User, error)
 	Save(ctx context.Context, user *pgModel.User) (int, error)
 	Update(ctx context.Context, user *pgModel.User) error
 }

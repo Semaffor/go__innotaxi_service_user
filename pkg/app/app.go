@@ -4,10 +4,15 @@ import (
 	"log"
 
 	innotaxi "github.com/Semaffor/go__innotaxi_service_user"
+	"github.com/Semaffor/go__innotaxi_service_user/pkg/auth/jwt"
 	"github.com/Semaffor/go__innotaxi_service_user/pkg/config"
 	"github.com/Semaffor/go__innotaxi_service_user/pkg/handler"
-	repositoryMongo "github.com/Semaffor/go__innotaxi_service_user/pkg/repository/mongo"
-	repositoryPostgres "github.com/Semaffor/go__innotaxi_service_user/pkg/repository/postgres"
+	"github.com/Semaffor/go__innotaxi_service_user/pkg/hash"
+	"github.com/Semaffor/go__innotaxi_service_user/pkg/repository"
+	repoMongo "github.com/Semaffor/go__innotaxi_service_user/pkg/repository/mongo"
+	repoPostgres "github.com/Semaffor/go__innotaxi_service_user/pkg/repository/postgres"
+	repoRedis "github.com/Semaffor/go__innotaxi_service_user/pkg/repository/redis"
+	"github.com/Semaffor/go__innotaxi_service_user/pkg/service"
 )
 
 func Run() error {
@@ -16,17 +21,12 @@ func Run() error {
 		log.Fatalf("Can't read config/env file: %s", err.Error())
 	}
 
-	postgres, err := repositoryPostgres.NewConnection(&configs.Postgres)
+	repositories, err := initRepositories(configs)
 	if err != nil {
-		return err
+		log.Fatalf("Can't init repo layer: %v", err.Error())
 	}
 
-	mongo, err := repositoryMongo.NewConnection(&configs.Mongo)
-	if err != nil {
-		return err
-	}
-
-	services := initServices(postgres, mongo)
+	services := initServices(repositories, configs)
 	newHandler := handler.NewHandler(services)
 
 	server := new(innotaxi.Server)
@@ -36,4 +36,33 @@ func Run() error {
 	}
 
 	return nil
+}
+
+func initRepositories(configs *config.Config) (*repository.Repositories, error) {
+	postgresCon, err := repoPostgres.NewConnection(&configs.Postgres)
+	if err != nil {
+		return nil, err
+	}
+
+	mongoCon, err := repoMongo.NewConnection(&configs.Mongo)
+	if err != nil {
+		return nil, err
+	}
+
+	redisCon, err := repoRedis.NewConnection(&configs.Redis)
+	if err != nil {
+		return nil, err
+	}
+
+	return repository.NewRepositories(postgresCon, mongoCon, redisCon), nil
+}
+
+func initServices(repos *repository.Repositories, configs *config.Config) *service.Services {
+	deps := &service.Deps{
+		Repos:        repos,
+		TokenManager: *jwt.NewManager(&configs.AuthConfig.JWT),
+		Hasher:       hash.NewSHA256Hasher(configs.AuthConfig.PasswordSalt),
+	}
+
+	return service.NewServices(deps)
 }
